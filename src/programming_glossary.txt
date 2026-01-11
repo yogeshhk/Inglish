@@ -1,0 +1,132 @@
+# Programming Domain Glossary
+# Technical terms to preserve in English
+
+domain: programming
+language_pair: "en_hi"
+version: "1.0"
+
+# Single-word technical terms
+terms:
+  - term: "variable"
+    preserve: true
+    context: "data storage element"
+    
+  - term: "function"
+    preserve: true
+    context: "reusable code block"
+    
+  - term: "class"
+    preserve: true
+    context: "object template"
+    
+  - term: "object"
+    preserve: true
+    context: "instance of a class"
+    
+  - term: "array"
+    preserve: true
+    context: "sequence container"
+    
+  - term: "loop"
+    preserve: true
+    context: "iteration construct"
+    
+  - term: "method"
+    preserve: true
+    context: "function in a class"
+    
+  - term: "parameter"
+    preserve: true
+    context: "function input"
+    
+  - term: "argument"
+    preserve: true
+    context: "function input value"
+    
+  - term: "return"
+    preserve: true
+    context: "function output"
+    
+  - term: "string"
+    preserve: true
+    context: "text data type"
+    
+  - term: "integer"
+    preserve: true
+    context: "whole number type"
+    
+  - term: "boolean"
+    preserve: true
+    context: "true/false type"
+    
+  - term: "list"
+    preserve: true
+    context: "collection type"
+    
+  - term: "dictionary"
+    preserve: true
+    context: "key-value store"
+    
+  - term: "tuple"
+    preserve: true
+    context: "immutable sequence"
+    
+  - term: "set"
+    preserve: true
+    context: "unique collection"
+    
+  - term: "iterator"
+    preserve: true
+    context: "iteration object"
+    
+  - term: "index"
+    preserve: true
+    context: "position in sequence"
+    
+  - term: "key"
+    preserve: true
+    context: "dictionary key"
+    
+  - term: "value"
+    preserve: true
+    context: "data value"
+    
+  - term: "instance"
+    preserve: true
+    context: "object instance"
+    
+  - term: "inheritance"
+    preserve: true
+    context: "OOP concept"
+    
+  - term: "polymorphism"
+    preserve: true
+    context: "OOP concept"
+    
+  - term: "encapsulation"
+    preserve: true
+    context: "OOP concept"
+
+# Multi-word compound terms (preserve as complete phrases)
+compound_terms:
+  - "for loop"
+  - "while loop"
+  - "if statement"
+  - "else statement"
+  - "elif statement"
+  - "member variable"
+  - "class variable"
+  - "instance variable"
+  - "local variable"
+  - "global variable"
+  - "data type"
+  - "return type"
+  - "function call"
+  - "method call"
+  - "object oriented"
+  - "object-oriented programming"
+  - "source code"
+  - "syntax error"
+  - "runtime error"
+  - "compile time"
+  - "run time"

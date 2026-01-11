@@ -1,0 +1,65 @@
+{
+  "programming": [
+    {
+      "regex": "\\w+\\(\\)",
+      "type": "function_call",
+      "description": "Function calls like print(), len(), etc."
+    },
+    {
+      "regex": "\\b[a-z_][a-z0-9_]*\\s*=",
+      "type": "assignment",
+      "description": "Variable assignments"
+    },
+    {
+      "regex": "\\b(int|str|float|bool|list|dict|tuple|set)\\b",
+      "type": "data_type",
+      "description": "Built-in data types"
+    },
+    {
+      "regex": "\\b(if|else|elif|for|while|return|break|continue|pass|def|class|import|from|try|except|finally|with|as|raise|assert|yield|lambda)\\b",
+      "type": "keyword",
+      "description": "Python keywords"
+    },
+    {
+      "regex": "\\b[A-Z][a-zA-Z0-9]*\\(",
+      "type": "class_instantiation",
+      "description": "Class instantiation or constructor calls"
+    }
+  ],
+  
+  "physics": [
+    {
+      "regex": "\\b(Newton|Einstein|Planck|Maxwell|Schrodinger|Heisenberg)\\b",
+      "type": "scientist_name",
+      "description": "Famous physicists"
+    },
+    {
+      "regex": "\\b(meter|metre|kilogram|second|ampere|kelvin|mole|candela)s?\\b",
+      "type": "si_unit",
+      "description": "SI base units"
+    },
+    {
+      "regex": "[A-Z]\\s*=\\s*[^,;]+",
+      "type": "equation",
+      "description": "Simple equations"
+    }
+  ],
+  
+  "finance": [
+    {
+      "regex": "\\b(USD|EUR|GBP|JPY|INR|CNY)\\b",
+      "type": "currency",
+      "description": "Currency codes"
+    },
+    {
+      "regex": "\\b[A-Z]{2,5}\\b",
+      "type": "ticker_symbol",
+      "description": "Stock ticker symbols"
+    },
+    {
+      "regex": "\\b(GDP|ROI|NPV|IRR|P/E|EPS|IPO|ETF)\\b",
+      "type": "finance_acronym",
+      "description": "Common finance acronyms"
+    }
+  ]
+}
