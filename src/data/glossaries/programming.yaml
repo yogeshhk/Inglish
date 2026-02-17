@@ -1,37 +1,62 @@
 # Programming Domain Glossary
-# Technical terms to preserve in English, with phonetic Devanagari rendering
+# Technical terms to preserve in English, with phonetic Devanagari rendering.
+# Devanagari values reflect how the term is spoken in natural Hinglish.
 
 domain: programming
 language_pair: "en_hi"
-version: "1.1"
+version: "1.2"
 
-# Single-word technical terms
-# 'devanagari' = how the term sounds when spoken naturally in Hinglish
+# ── Single-word terms ────────────────────────────────────────────────────────
 terms:
   - term: "variable"
     preserve: true
-    devanagari: "वेरिएबल"
+    devanagari: "व्हेरिएबल"
     context: "data storage element"
+
+  - term: "variables"
+    preserve: true
+    devanagari: "व्हेरिएबल्स"
+    context: "plural of variable"
 
   - term: "function"
     preserve: true
     devanagari: "फंक्शन"
     context: "reusable code block"
 
+  - term: "functions"
+    preserve: true
+    devanagari: "फंक्शन्स"
+    context: "plural of function"
+
   - term: "class"
     preserve: true
     devanagari: "क्लास"
     context: "object template"
+
+  - term: "classes"
+    preserve: true
+    devanagari: "क्लासेज़"
+    context: "plural of class"
 
   - term: "object"
     preserve: true
     devanagari: "ऑब्जेक्ट"
     context: "instance of a class"
 
+  - term: "objects"
+    preserve: true
+    devanagari: "ऑब्जेक्ट्स"
+    context: "plural of object"
+
   - term: "array"
     preserve: true
     devanagari: "ऐरे"
     context: "sequence container"
+
+  - term: "arrays"
+    preserve: true
+    devanagari: "ऐरेज़"
+    context: "plural of array"
 
   - term: "loop"
     preserve: true
@@ -43,15 +68,30 @@ terms:
     devanagari: "मेथड"
     context: "function in a class"
 
+  - term: "methods"
+    preserve: true
+    devanagari: "मेथड्स"
+    context: "plural of method"
+
   - term: "parameter"
     preserve: true
     devanagari: "पैरामीटर"
     context: "function input"
 
+  - term: "parameters"
+    preserve: true
+    devanagari: "पैरामीटर्स"
+    context: "plural of parameter"
+
   - term: "argument"
     preserve: true
     devanagari: "आर्ग्युमेंट"
     context: "function input value"
+
+  - term: "arguments"
+    preserve: true
+    devanagari: "आर्ग्युमेंट्स"
+    context: "plural of argument"
 
   - term: "return"
     preserve: true
@@ -62,6 +102,11 @@ terms:
     preserve: true
     devanagari: "स्ट्रिंग"
     context: "text data type"
+
+  - term: "strings"
+    preserve: true
+    devanagari: "स्ट्रिंग्स"
+    context: "plural of string"
 
   - term: "integer"
     preserve: true
@@ -83,6 +128,11 @@ terms:
     devanagari: "लिस्ट"
     context: "collection type"
 
+  - term: "lists"
+    preserve: true
+    devanagari: "लिस्ट्स"
+    context: "plural of list"
+
   - term: "dictionary"
     preserve: true
     devanagari: "डिक्शनरी"
@@ -90,7 +140,7 @@ terms:
 
   - term: "tuple"
     preserve: true
-    devanagari: "टपल"
+    devanagari: "ट्यूपल"
     context: "immutable sequence"
 
   - term: "set"
@@ -115,8 +165,13 @@ terms:
 
   - term: "value"
     preserve: true
-    devanagari: "वैल्यू"
+    devanagari: "व्हॅल्यू"
     context: "data value"
+
+  - term: "values"
+    preserve: true
+    devanagari: "व्हॅल्यूज़"
+    context: "plural of value"
 
   - term: "instance"
     preserve: true
@@ -130,12 +185,12 @@ terms:
 
   - term: "polymorphism"
     preserve: true
-    devanagari: "पॉलीमॉर्फिज्म"
+    devanagari: "पॉलिमॉर्फिज्म"
     context: "OOP concept"
 
   - term: "encapsulation"
     preserve: true
-    devanagari: "एनकैप्सुलेशन"
+    devanagari: "एन्कैप्सुलेशन"
     context: "OOP concept"
 
   - term: "condition"
@@ -147,6 +202,11 @@ terms:
     preserve: true
     devanagari: "एक्सेप्शन"
     context: "error handling"
+
+  - term: "exceptions"
+    preserve: true
+    devanagari: "एक्सेप्शन्स"
+    context: "plural of exception"
 
   - term: "module"
     preserve: true
@@ -183,9 +243,14 @@ terms:
     devanagari: "नोड"
     context: "graph/tree element"
 
+  - term: "nodes"
+    preserve: true
+    devanagari: "नोड्स"
+    context: "plural of node"
+
   - term: "algorithm"
     preserve: true
-    devanagari: "एल्गोरिदम"
+    devanagari: "अल्गोरिद्म"
     context: "step-by-step procedure"
 
   - term: "debug"
@@ -198,7 +263,13 @@ terms:
     devanagari: "एरर"
     context: "program error"
 
-# Multi-word compound terms (matched and replaced as complete phrases)
+  - term: "errors"
+    preserve: true
+    devanagari: "एरर्स"
+    context: "plural of error"
+
+# ── Compound terms ────────────────────────────────────────────────────────────
+# Matched as complete phrases (longest-match, highest priority over single terms).
 compound_terms:
   - term: "for loop"
     devanagari: "फॉर लूप"
@@ -215,20 +286,35 @@ compound_terms:
   - term: "elif statement"
     devanagari: "एलिफ स्टेटमेंट"
 
+  - term: "member variables"
+    devanagari: "मेंबर व्हेरिएबल्स"
+
   - term: "member variable"
-    devanagari: "मेंबर वेरिएबल"
+    devanagari: "मेंबर व्हेरिएबल"
+
+  - term: "class variables"
+    devanagari: "क्लास व्हेरिएबल्स"
 
   - term: "class variable"
-    devanagari: "क्लास वेरिएबल"
+    devanagari: "क्लास व्हेरिएबल"
+
+  - term: "instance variables"
+    devanagari: "इन्स्टेंस व्हेरिएबल्स"
 
   - term: "instance variable"
-    devanagari: "इन्स्टेंस वेरिएबल"
+    devanagari: "इन्स्टेंस व्हेरिएबल"
+
+  - term: "local variables"
+    devanagari: "लोकल व्हेरिएबल्स"
 
   - term: "local variable"
-    devanagari: "लोकल वेरिएबल"
+    devanagari: "लोकल व्हेरिएबल"
+
+  - term: "global variables"
+    devanagari: "ग्लोबल व्हेरिएबल्स"
 
   - term: "global variable"
-    devanagari: "ग्लोबल वेरिएबल"
+    devanagari: "ग्लोबल व्हेरिएबल"
 
   - term: "data type"
     devanagari: "डेटा टाइप"
@@ -252,7 +338,7 @@ compound_terms:
     devanagari: "सोर्स कोड"
 
   - term: "syntax error"
-    devanagari: "सिंटैक्स एरर"
+    devanagari: "सिंटेक्स एरर"
 
   - term: "runtime error"
     devanagari: "रनटाइम एरर"

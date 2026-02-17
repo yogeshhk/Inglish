@@ -2,285 +2,263 @@
 
 import re
 import sys
-from typing import Dict, Optional
 from abc import ABC, abstractmethod
+from typing import Dict, Optional
 
 
 class BaseTranslator(ABC):
     """Abstract base class for translators."""
-    
+
     def __init__(self, target_language: str = "hi"):
-        """
-        Initialize translator.
-        
-        Args:
-            target_language: Target language code (hi=Hindi, mr=Marathi, etc.)
-        """
         self.target_language = target_language
-    
+
     @abstractmethod
     def translate(self, text: str) -> str:
         """Translate text to target language."""
         pass
-    
+
     def validate_constraints(self, original: str, translated: str) -> bool:
         """Verify that bracketed terms are preserved."""
-        original_terms = sorted(re.findall(r'\[([^\]]+)\]', original))
+        original_terms  = sorted(re.findall(r'\[([^\]]+)\]', original))
         translated_terms = sorted(re.findall(r'\[([^\]]+)\]', translated))
         return original_terms == translated_terms
 
 
 class BaselineTranslator(BaseTranslator):
     """
-    Simple rule-based translator (baseline approach).
-    
-    This is the simplest, crudest algorithm - uses direct word-to-word mapping
-    with basic grammar rules for Hindi.
+    Rule-based English → Hinglish translator (baseline approach).
+
+    Pipeline (all steps work on already-guarded text received from the pipeline):
+      1. Pre-grammar rules   – structural rewrites on raw English constructs
+                               (e.g. "X has Y" → "X mein Y hain").
+      2. Protect [brackets]  – guarded technical terms become __P0__ placeholders.
+      3. Word substitution   – each non-placeholder word is looked up in word_map.
+      4. SOV reorder         – if a multi-word verb phrase sits mid-sentence,
+                               move it to the end (English SVO → Hindi SOV).
+      5. Restore [brackets]  – placeholders become [term] again.
     """
-    
+
+    # Verb phrases that should appear at sentence-end in Hindi.
+    # Sorted longest-first so the most specific phrase is tried first.
+    _SOV_VERBS = sorted([
+        'return karta hai', 'store karta hai', 'contain karta hai',
+        'banata hai',       'upyog karta hai', 'iterate karta hai',
+        'extend karta hai', 'implement karta hai', 'call karta hai',
+        'jaari rehta hai',  'ban jaata hai',   'define karta hai',
+        'declare karta hai','throw karta hai', 'run karta hai',
+        'execute karta hai',
+    ], key=len, reverse=True)
+
     def __init__(self, target_language: str = "hi"):
         super().__init__(target_language)
-        
-        # Simple English to Hindi word mappings
-        self.word_map = {
-            # Articles
-            'the': '',
-            'a': 'ek',
-            'an': 'ek',
-            
-            # Pronouns
-            'this': 'yeh',
-            'that': 'voh',
-            'these': 'ye',
-            'those': 've',
-            'it': 'yeh',
-            'he': 'voh',
-            'she': 'voh',
-            
-            # Prepositions
-            'in': 'mein',
-            'on': 'par',
-            'at': 'par',
-            'to': 'ko',
-            'of': 'ka',
-            'from': 'se',
-            'with': 'ke saath',
-            'over': 'ke upar',
-            
-            # Verbs (basic forms)
-            'is': 'hai',
-            'are': 'hain',
-            'was': 'tha',
-            'were': 'the',
-            'has': 'hai',
-            'have': 'hain',
-            'had': 'tha',
-            'be': 'ho',
-            'been': 'gaya',
-            
-            # Common verbs
-            'create': 'banao',
-            'creates': 'banata hai',
-            'created': 'banaya',
-            'use': 'upyog karo',
-            'uses': 'upyog karta hai',
-            'used': 'upyog kiya',
-            'assign': 'assign karo',
-            'assigned': 'assign kiya',
-            'iterate': 'iterate karo',
-            'iterates': 'iterate karta hai',
-            'iterated': 'iterate kiya',
-            'increment': 'badhao',
-            'incremented': 'badhaya',
-            'decrement': 'ghatao',
-            
-            # Common adjectives
-            'each': 'har',
-            'every': 'har',
-            'all': 'sabhi',
-            'first': 'pehla',
-            'last': 'aakhri',
-            'next': 'agla',
-            'previous': 'pichla',
-            
-            # Conjunctions
-            'and': 'aur',
-            'or': 'ya',
-            'but': 'lekin',
-            'then': 'phir',
-            'after': 'baad',
-            'before': 'pehle',
-            
-            # Common nouns (non-technical)
-            'number': 'number',
-            'name': 'naam',
-            'time': 'samay',
-            'way': 'tarika',
-        }
-        
-        # Grammar rules applied AFTER protected terms are restored so that
-        # they match the actual [bracket] syntax, not the __PROTECTED_N__
-        # placeholders that exist during the word-translation phase.
-        #
-        # Rule format: (search_pattern, replacement)
-        # These reorder common English constructions into natural Hindi word order.
-        self.grammar_rules = [
-            # "X of Y" -> "Y ka X"  e.g. "[array] of [integers]" -> "[integers] ka [array]"
-            (r'\[([^\]]+)\] of \[([^\]]+)\]', r'[\2] ka [\1]'),
-            # "X in Y" -> "Y mein X"  e.g. "[loop] in [function]" -> "[function] mein [loop]"
-            (r'\[([^\]]+)\] in \[([^\]]+)\]', r'[\2] mein [\1]'),
-        ]
-    
-    def translate(self, text: str) -> str:
-        """
-        Simple rule-based translation.
-        
-        Strategy:
-        1. Apply grammar rules to bracketed terms BEFORE translating,
-           while the [bracket] syntax is still intact.
-        2. Protect bracketed terms with placeholders.
-        3. Translate each remaining word using the dictionary.
-        4. Restore placeholders.
-        """
-        # Step 1: Apply grammar reordering rules while [brackets] are present
-        reordered = text
-        for pattern, replacement in self.grammar_rules:
-            reordered = re.sub(pattern, replacement, reordered)
 
-        # Step 2: Protect bracketed terms so word translation leaves them alone
-        bracketed_pattern = r'\[([^\]]+)\]'
-        protected_terms = {}
-        
-        def protect_term(match):
-            idx = len(protected_terms)
-            placeholder = f"__PROTECTED_{idx}__"
-            protected_terms[placeholder] = match.group(0)
-            return placeholder
-        
-        protected_text = re.sub(bracketed_pattern, protect_term, reordered)
-        
-        # Step 3: Translate word by word
-        words = protected_text.split()
-        translated_words = []
-        
+        self.word_map: Dict[str, str] = {
+            # Articles
+            'the': '', 'a': 'ek', 'an': 'ek',
+
+            # Pronouns – oblique forms are natural before postpositions
+            # ("is class mein" = "in this class", not "yeh class mein")
+            'this': 'is',   # oblique of yeh
+            'that': 'us',   # oblique of voh
+            'these': 'in',  # oblique plural
+            'those': 'un',  # oblique plural
+            'it': 'yeh', 'he': 'voh', 'she': 'voh', 'its': 'iske',
+
+            # Prepositions
+            'in': 'mein', 'on': 'par', 'at': 'par', 'to': 'ko',
+            'of': 'ka',   'from': 'se', 'with': 'ke saath', 'over': 'ke upar',
+            'until': 'jab tak',
+
+            # Linking verbs
+            # NOTE: 'has' is intentionally absent – handled by the possession
+            # grammar rule which converts "Subject has Object" → "Subject mein Object hain".
+            'is': 'hai', 'are': 'hain', 'was': 'tha', 'were': 'the',
+            'have': 'hain', 'had': 'tha', 'be': 'ho', 'been': 'gaya',
+
+            # Number words
+            'zero': 'shunya', 'one': 'ek',  'two': 'do',    'three': 'teen',
+            'four': 'chaar',  'five': 'paanch', 'six': 'chhe', 'seven': 'saat',
+            'eight': 'aath',  'nine': 'nau',    'ten': 'das',
+
+            # Adjectives / determiners
+            'each': 'har', 'every': 'har', 'all': 'sabhi', 'own': 'khud ka',
+            'multiple': 'kai', 'new': 'naya', 'same': 'wahi',
+            'first': 'pehla', 'last': 'aakhri', 'next': 'agla', 'previous': 'pichla',
+
+            # Conjunctions / adverbs
+            'and': 'aur', 'or': 'ya', 'but': 'lekin', 'then': 'phir',
+            'after': 'baad', 'before': 'pehle', 'when': 'jab', 'not': 'nahi',
+            'also': 'bhi', 'only': 'sirf', 'always': 'hamesha',
+            'never': 'kabhi nahi',
+
+            # Action verbs – infinitive / imperative
+            'create': 'banao',       'use': 'upyog karo',  'assign': 'assign karo',
+            'iterate': 'iterate karo', 'increment': 'badhao', 'decrement': 'ghatao',
+            'return': 'return karo', 'store': 'store karo', 'call': 'call karo',
+            'define': 'define karo', 'declare': 'declare karo', 'throw': 'throw karo',
+            'run': 'run karo',       'execute': 'execute karo',
+
+            # Action verbs – 3rd-person singular present (karta hai forms)
+            'creates': 'banata hai',     'uses': 'upyog karta hai',
+            'iterates': 'iterate karta hai', 'incremented': 'badhaya',
+            'returns': 'return karta hai',   'stores': 'store karta hai',
+            'calls': 'call karta hai',       'defines': 'define karta hai',
+            'declares': 'declare karta hai', 'throws': 'throw karta hai',
+            'runs': 'run karta hai',         'executes': 'execute karta hai',
+            'contains': 'contain karta hai', 'extends': 'extend karta hai',
+            'implements': 'implement karta hai',
+            'continues': 'jaari rehta hai',
+            'becomes': 'ban jaata hai',
+
+            # Action verbs – past
+            'created': 'banaya', 'used': 'upyog kiya', 'assigned': 'assign kiya',
+            'iterated': 'iterate kiya',
+
+            # Common non-technical nouns
+            'name': 'naam', 'time': 'samay', 'way': 'tarika', 'number': 'number',
+            'true': 'true', 'false': 'false',
+        }
+
+        # ── Pre-translation grammar rules ──────────────────────────────────
+        # Applied BEFORE word substitution, while [bracket] syntax is visible.
+        # Each entry: (compiled_regex, replacement_string).
+        #
+        # Possession rule: "Subject has Object." → "Subject mein Object hain."
+        # English "X has Y" → Hindi "X mein Y hain" (locative possession).
+        # Pattern handles [bracketed] tokens because guarding already happened.
+        # Guard: negative lookahead skips "has been" (perfect tense).
+        self._pre_rules = [
+            (
+                re.compile(
+                    r'((?:[\w]+|\[[^\]]+\])(?:\s+(?:[\w]+|\[[^\]]+\]))*?)'
+                    r'\s+has\s+(?!been\b)'
+                    r'((?:[\w]+|\[[^\]]+\])(?:\s+(?:[\w]+|\[[^\]]+\]))*?)'
+                    r'([.!?]*)$',
+                    re.IGNORECASE,
+                ),
+                r'\1 mein \2 hain\3',
+            ),
+        ]
+
+        # ── Post-bracket grammar rules ──────────────────────────────────────
+        # Applied AFTER word substitution but BEFORE bracket restoration,
+        # while [bracket] syntax is still visible.  Used for term-pair reordering.
+        self._post_rules = [
+            # "[X] of [Y]" → "[Y] ka [X]"
+            (re.compile(r'\[([^\]]+)\] of \[([^\]]+)\]'), r'[\2] ka [\1]'),
+            # "[X] in [Y]" → "[Y] mein [X]"
+            (re.compile(r'\[([^\]]+)\] in \[([^\]]+)\]'), r'[\2] mein [\1]'),
+        ]
+
+    # ------------------------------------------------------------------
+
+    def translate(self, text: str) -> str:
+        """Translate guarded English text to Roman Hinglish."""
+
+        # Step 1: pre-grammar rules (possession restructure, etc.)
+        result = text
+        for pattern, replacement in self._pre_rules:
+            result = pattern.sub(replacement, result)
+
+        # Step 2: protect [bracketed] technical terms
+        protected: Dict[str, str] = {}
+
+        def protect(m: re.Match) -> str:
+            key = f'__P{len(protected)}__'
+            protected[key] = m.group(0)
+            return key
+
+        result = re.sub(r'\[([^\]]+)\]', protect, result)
+
+        # Step 3: word-by-word substitution
+        words = result.split()
+        out = []
         for word in words:
-            # Check if it's a protected term placeholder
-            if word in protected_terms:
-                translated_words.append(word)
+            if word in protected:
+                out.append(word)
                 continue
-            
-            # Clean word (remove punctuation for lookup)
-            clean_word = word.lower().strip('.,!?;:()')
-            
-            # Translate using dictionary
-            if clean_word in self.word_map:
-                translation = self.word_map[clean_word]
-                if translation:  # Skip empty translations (like 'the')
-                    translated_words.append(translation)
+            clean = word.lower().strip('.,!?;:()')
+            if clean in self.word_map:
+                mapped = self.word_map[clean]
+                if mapped:          # skip empty mappings (e.g. 'the' → '')
+                    out.append(mapped)
             else:
-                # Keep unknown words as-is (might be technical terms)
-                translated_words.append(word)
-        
-        # Join translated words
-        result = ' '.join(translated_words)
-        
-        # Step 4: Restore protected terms
-        for placeholder, term in protected_terms.items():
-            result = result.replace(placeholder, term)
-        
-        # Clean up extra spaces
-        result = re.sub(r'\s+', ' ', result).strip()
-        
-        return result
+                out.append(word)
+        result = ' '.join(out)
+
+        # Step 4: post-bracket grammar rules (term-pair reordering)
+        for pattern, replacement in self._post_rules:
+            result = pattern.sub(replacement, result)
+
+        # Step 5: SOV reorder – move verb phrase from mid-sentence to end
+        # English SVO → Hindi SOV:
+        #   "function return karta hai ek boolean value" →
+        #   "function ek boolean value return karta hai"
+        for verb in self._SOV_VERBS:
+            m = re.match(
+                r'^(.+?)\s+' + re.escape(verb) + r'\s+(.+?)([.,!?]*)$',
+                result,
+            )
+            if m:
+                result = f'{m.group(1)} {m.group(2)} {verb}{m.group(3)}'
+                break
+
+        # Step 6: restore protected terms
+        for key, term in protected.items():
+            result = result.replace(key, term)
+
+        return re.sub(r'\s+', ' ', result).strip()
 
 
 class LLMTranslator(BaseTranslator):
     """
     LLM-based translator using the OpenAI API (v1.x client).
     Falls back to BaselineTranslator if the package is unavailable or the
-    API call fails.
+    API key is not set.
     """
-    
-    def __init__(self, target_language: str = "hi", model: str = "gpt-3.5-turbo",
-                 api_key: Optional[str] = None, temperature: float = 0.3):
+
+    def __init__(self, target_language: str = "hi",
+                 model: str = "gpt-3.5-turbo",
+                 api_key: Optional[str] = None,
+                 temperature: float = 0.3):
         super().__init__(target_language)
         self.model = model
         self.api_key = api_key
         self.temperature = temperature
-        
-        # Language name mapping
         self.lang_names = {
-            'hi': 'Hindi',
-            'mr': 'Marathi',
-            'te': 'Telugu',
-            'ta': 'Tamil',
-            'bn': 'Bengali',
+            'hi': 'Hindi', 'mr': 'Marathi', 'te': 'Telugu',
+            'ta': 'Tamil',  'bn': 'Bengali',
         }
-    
+
     def translate(self, text: str) -> str:
-        """
-        Translate using LLM with constraint prompting.
-        
-        Requires openai>=1.0 and a valid API key.  Falls back to
-        BaselineTranslator when either is missing.
-        """
         try:
             import openai
+        except ImportError:
+            print("Warning: OpenAI package not installed. Falling back to baseline.", file=sys.stderr)
+            return BaselineTranslator(self.target_language).translate(text)
 
-            if not self.api_key:
-                print(
-                    "Warning: No API key provided. Falling back to baseline translation.",
-                    file=sys.stderr,
-                )
-                return BaselineTranslator(self.target_language).translate(text)
+        if not self.api_key:
+            print("Warning: No API key provided. Falling back to baseline.", file=sys.stderr)
+            return BaselineTranslator(self.target_language).translate(text)
 
-            # openai >= 1.0 API
+        lang = self.lang_names.get(self.target_language, 'Hindi')
+        try:
             client = openai.OpenAI(api_key=self.api_key)
-
-            lang_name = self.lang_names.get(self.target_language, 'Hindi')
-
-            system_prompt = f"""You are an expert technical translator to {lang_name}.
-
-CRITICAL RULES:
-1. Keep all text within [square brackets] EXACTLY unchanged
-2. Do NOT translate, transliterate, or modify bracketed content
-3. Do NOT add or remove brackets
-4. Translate only non-bracketed text naturally to {lang_name}
-5. Output in Devanagari script
-6. Maintain technical tone
-7. Use natural {lang_name} grammar
-
-Example:
-Input: "The [for loop] iterates over the [array]."
-Output: "[for loop] [array] के ऊपर iterate करता है।"
-"""
-
-            user_prompt = (
-                f'Translate to {lang_name}:\n"{text}"\n\n'
-                "Remember: Keep all [bracketed] content exactly as-is."
-            )
-
             response = client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
+                    {"role": "system", "content": (
+                        f"You are an expert technical translator to {lang}.\n"
+                        "RULES: Keep ALL [bracketed] content EXACTLY unchanged. "
+                        "Translate only non-bracketed text. Use Roman script (not Devanagari). "
+                        "Maintain natural Hindi grammar and technical tone."
+                    )},
+                    {"role": "user", "content": f'Translate to {lang}:\n"{text}"\n\nKeep [bracketed] content unchanged.'},
                 ],
                 temperature=self.temperature,
                 max_tokens=len(text.split()) * 3,
             )
-
             return response.choices[0].message.content.strip()
-
-        except ImportError:
-            print(
-                "Warning: openai package not installed. Falling back to baseline.",
-                file=sys.stderr,
-            )
-            return BaselineTranslator(self.target_language).translate(text)
         except Exception as e:
-            print(
-                f"Warning: LLM translation failed ({e}). Falling back to baseline.",
-                file=sys.stderr,
-            )
+            print(f"Warning: LLM translation failed ({e}). Falling back to baseline.", file=sys.stderr)
             return BaselineTranslator(self.target_language).translate(text)
