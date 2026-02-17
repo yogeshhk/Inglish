@@ -2,7 +2,7 @@
 
 import re
 from typing import List, Tuple, Dict, Set
-from .utils import load_glossary, load_patterns, build_trie, resolve_overlapping_spans
+from utils import load_glossary, load_patterns, build_trie, resolve_overlapping_spans
 
 
 class TermExtractor:

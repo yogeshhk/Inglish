@@ -18,7 +18,7 @@ class ScriptConverter:
         
         # Simple phonetic mapping (Devanagari to Roman)
         # For production, use indic-transliteration library
-        self.devanagari_to_roman = {
+        self.devanagari_roman_map = {
             # Vowels
             'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ii', 'उ': 'u', 'ऊ': 'uu',
             'ऋ': 'ri', 'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au',
@@ -92,8 +92,8 @@ class ScriptConverter:
         result = []
         
         for char in text:
-            if char in self.devanagari_to_roman:
-                result.append(self.devanagari_to_roman[char])
+            if char in self.devanagari_roman_map:
+                result.append(self.devanagari_roman_map[char])
             else:
                 # Keep non-Devanagari characters (English, punctuation, etc.)
                 result.append(char)
@@ -177,7 +177,7 @@ class ScriptConverter:
         
         if has_devanagari:
             devanagari = translated_text
-            roman = self.devanagari_to_roman(translated_text)
+            roman = self.devanagari_roman_map(translated_text)
         else:
             roman = translated_text
             devanagari = self.roman_to_devanagari_simple(translated_text)
@@ -212,6 +212,6 @@ class ScriptConverter:
         except ImportError:
             # Fall back to simple transliteration
             if to_script == "roman":
-                return self.devanagari_to_roman(text)
+                return self.devanagari_roman_map(text)
             else:
                 return self.roman_to_devanagari_simple(text)

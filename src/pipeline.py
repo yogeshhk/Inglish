@@ -2,9 +2,9 @@
 
 from dataclasses import dataclass
 from typing import Dict, Optional
-from .term_extractor import TermExtractor
-from .translator import BaselineTranslator, LLMTranslator
-from .script_converter import ScriptConverter
+from term_extractor import TermExtractor
+from translator import BaselineTranslator, LLMTranslator
+from script_converter import ScriptConverter
 
 
 @dataclass
@@ -160,7 +160,7 @@ class InglishtranslationPipeline:
         Returns:
             Dictionary of quality metrics
         """
-        from .utils import extract_bracketed_terms
+        from utils import extract_bracketed_terms
         
         metrics = {}
         
