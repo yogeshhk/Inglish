@@ -1,217 +1,143 @@
+# -*- coding: utf-8 -*-
 """Script conversion module for Roman and Devanagari output."""
 
 import re
-from typing import Dict
+from typing import Dict, List, Optional
+
+from indic_transliteration import sanscript
+from indic_transliteration.sanscript import transliterate
 
 
 class ScriptConverter:
-    """Convert between Roman and Devanagari scripts."""
-    
+    """Convert between Roman and Devanagari scripts using indic-transliteration."""
+
+    SCHEMES = {
+        "itrans": sanscript.ITRANS,
+        "hk": sanscript.HK,
+        "velthuis": sanscript.VELTHUIS,
+        "iast": sanscript.IAST,
+    }
+
     def __init__(self, target_language: str = "hi"):
-        """
-        Initialize script converter.
-        
-        Args:
-            target_language: Target language code
-        """
         self.target_language = target_language
-        
-        # Simple phonetic mapping (Devanagari to Roman)
-        # For production, use indic-transliteration library
-        self.devanagari_roman_map = {
-            # Vowels
-            'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ii', 'उ': 'u', 'ऊ': 'uu',
-            'ऋ': 'ri', 'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au',
-            
-            # Consonants
-            'क': 'k', 'ख': 'kh', 'ग': 'g', 'घ': 'gh', 'ङ': 'ng',
-            'च': 'ch', 'छ': 'chh', 'ज': 'j', 'झ': 'jh', 'ञ': 'ny',
-            'ट': 't', 'ठ': 'th', 'ड': 'd', 'ढ': 'dh', 'ण': 'n',
-            'त': 't', 'थ': 'th', 'द': 'd', 'ध': 'dh', 'न': 'n',
-            'प': 'p', 'फ': 'ph', 'ब': 'b', 'भ': 'bh', 'म': 'm',
-            'य': 'y', 'र': 'r', 'ल': 'l', 'व': 'v', 'श': 'sh',
-            'ष': 'sh', 'स': 's', 'ह': 'h', 'क्ष': 'ksh', 'त्र': 'tra', 'ज्ञ': 'gya',
-            
-            # Vowel signs
-            'ा': 'aa', 'ि': 'i', 'ी': 'ii', 'ु': 'u', 'ू': 'uu',
-            'ृ': 'ri', 'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au',
-            
-            # Special
-            '्': '', 'ं': 'm', 'ः': 'h', 'ँ': 'n',
-            '।': '.', '॥': '..',
-            
-            # Numbers
-            '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
-            '५': '5', '६': '6', '७': '7', '८': '8', '९': '9',
-        }
-        
-        # Reverse mapping for Roman to Devanagari (simplified)
-        self.roman_to_devanagari = self._build_reverse_mapping()
-    
-    def _build_reverse_mapping(self) -> Dict[str, str]:
-        """Build reverse mapping from Roman to Devanagari."""
-        reverse = {}
-        
-        # For simplicity, we'll create basic mappings
-        # In production, use a proper transliteration library
-        mappings = {
-            'aa': 'आ', 'a': 'अ',
-            'ii': 'ई', 'i': 'इ',
-            'uu': 'ऊ', 'u': 'उ',
-            'ee': 'ई', 'e': 'ए',
-            'oo': 'ऊ', 'o': 'ओ',
-            'ai': 'ऐ', 'au': 'औ',
-            
-            'kh': 'ख', 'k': 'क',
-            'gh': 'घ', 'g': 'ग',
-            'chh': 'छ', 'ch': 'च',
-            'jh': 'झ', 'j': 'ज',
-            'th': 'थ', 't': 'त',
-            'dh': 'ध', 'd': 'द',
-            'ph': 'फ', 'p': 'प',
-            'bh': 'भ', 'b': 'ब',
-            
-            'sh': 'श', 's': 'स',
-            'h': 'ह', 'n': 'न', 'm': 'म',
-            'y': 'य', 'r': 'र', 'l': 'ल',
-            'v': 'व', 'w': 'व',
-        }
-        
-        return mappings
-    
-    def devanagari_to_roman(self, text: str) -> str:
+
+    # ------------------------------------------------------------------
+    # Core methods
+    # ------------------------------------------------------------------
+
+    def roman_to_devanagari(self, text: str, scheme: str = "itrans") -> str:
+        """ITRANS Roman → Devanagari (for pure Hindi words)."""
+        src = self.SCHEMES.get(scheme, sanscript.ITRANS)
+        return transliterate(text, src, sanscript.DEVANAGARI)
+
+    def devanagari_to_roman(self, text: str, scheme: str = "itrans") -> str:
+        """Devanagari → ITRANS Roman."""
+        src = self.SCHEMES.get(scheme, sanscript.ITRANS)
+        return transliterate(text, sanscript.DEVANAGARI, src)
+
+    # ------------------------------------------------------------------
+    # Pipeline-facing methods
+    # ------------------------------------------------------------------
+
+    def convert_mixed_text(self, text: str, to_format: str = "roman",
+                           term_devanagari_map: Optional[Dict[str, str]] = None) -> str:
         """
-        Convert Devanagari text to Roman script.
-        
+        Convert Roman Hinglish text to the desired script.
+
+        For 'devanagari':
+          - English technical terms are replaced with their phonetic Devanagari
+            form from term_devanagari_map (sourced from the glossary).
+          - Remaining Hindi Roman words are ITRANS-transliterated.
+          Result: fully Devanagari output with correct loanword rendering.
+
+        For 'roman':
+          - Devanagari spans (if any) are converted back to ITRANS Roman.
+          - Latin/English spans are left unchanged.
+
         Args:
-            text: Text in Devanagari script
-            
-        Returns:
-            Romanized text
-        """
-        result = []
-        
-        for char in text:
-            if char in self.devanagari_roman_map:
-                result.append(self.devanagari_roman_map[char])
-            else:
-                # Keep non-Devanagari characters (English, punctuation, etc.)
-                result.append(char)
-        
-        return ''.join(result)
-    
-    def roman_to_devanagari_simple(self, text: str) -> str:
-        """
-        Convert Roman text to Devanagari (simplified).
-        
-        Note: This is a very basic implementation. For production,
-        use indic-transliteration or AI4Bharat's Indic-Xlit.
-        
-        Args:
-            text: Text in Roman script
-            
-        Returns:
-            Devanagari text
-        """
-        # Protect English terms (typically in brackets or all-caps technical terms)
-        protected_terms = {}
-        
-        def protect_english(match):
-            idx = len(protected_terms)
-            placeholder = f"__ENG_{idx}__"
-            protected_terms[placeholder] = match.group(0)
-            return placeholder
-        
-        # Protect bracketed terms and common English words
-        text = re.sub(r'\[[^\]]+\]', protect_english, text)
-        text = re.sub(r'\b[A-Z][a-z]+\b', protect_english, text)  # Capitalized words
-        
-        # Simple transliteration (this is very crude)
-        result = text.lower()
-        
-        # Sort by length (descending) to match longer sequences first
-        sorted_mappings = sorted(self.roman_to_devanagari.items(), 
-                                key=lambda x: len(x[0]), reverse=True)
-        
-        for roman, devanagari in sorted_mappings:
-            result = result.replace(roman, devanagari)
-        
-        # Restore protected terms
-        for placeholder, term in protected_terms.items():
-            result = result.replace(placeholder, term)
-        
-        return result
-    
-    def convert_mixed_text(self, text: str, to_format: str = "roman") -> str:
-        """
-        Convert mixed Hindi-English text to desired format.
-        
-        Args:
-            text: Mixed language text
-            to_format: 'roman' or 'devanagari'
-            
-        Returns:
-            Converted text
+            text: Roman Hinglish string from the translator.
+            to_format: 'roman' or 'devanagari'.
+            term_devanagari_map: {english_term_lower: phonetic_devanagari}
+                e.g. {"for loop": "फ़ॉर लूप", "array": "ऐरे", "integers": "इंटीजर्स"}
         """
         if to_format == "roman":
-            return self.devanagari_to_roman(text)
+            return self._transliterate_devanagari_spans(text)
         elif to_format == "devanagari":
-            return self.roman_to_devanagari_simple(text)
-        else:
-            return text
-    
-    def generate_bilingual_output(self, english_input: str, 
-                                  translated_text: str) -> Dict[str, str]:
-        """
-        Generate output in multiple formats.
-        
-        Args:
-            english_input: Original English text
-            translated_text: Translated text (may be in Devanagari or Roman)
-            
-        Returns:
-            Dictionary with different format outputs
-        """
-        # Detect if input is Devanagari
+            return self._to_full_devanagari(text, term_devanagari_map or {})
+        return text
+
+    def generate_bilingual_output(self, english_input: str,
+                                  translated_text: str,
+                                  term_devanagari_map: Optional[Dict[str, str]] = None
+                                  ) -> Dict[str, str]:
+        """Generate both Roman and Devanagari outputs."""
         has_devanagari = bool(re.search(r'[\u0900-\u097F]', translated_text))
-        
         if has_devanagari:
             devanagari = translated_text
-            roman = self.devanagari_roman_map(translated_text)
+            roman = self._transliterate_devanagari_spans(translated_text)
         else:
             roman = translated_text
-            devanagari = self.roman_to_devanagari_simple(translated_text)
-        
+            devanagari = self._to_full_devanagari(translated_text,
+                                                   term_devanagari_map or {})
         return {
             "original_english": english_input,
             "hinglish_roman": roman,
             "hinglish_devanagari": devanagari,
         }
-    
-    def try_indic_transliteration(self, text: str, to_script: str = "roman") -> str:
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    def _to_full_devanagari(self, text: str,
+                             term_devanagari_map: Dict[str, str]) -> str:
         """
-        Try to use the indic-transliteration library if available.
-        Falls back to simple transliteration if not installed.
-        
-        Args:
-            text: Input text
-            to_script: Target script ('roman' or 'devanagari')
-            
-        Returns:
-            Transliterated text
+        Convert Roman Hinglish to fully Devanagari.
+
+        Pass 1 — substitute English terms with their glossary Devanagari form,
+                  stashing them behind null-byte sentinels so ITRANS won't touch them.
+        Pass 2 — ITRANS-transliterate the remaining (Hindi Roman) words.
+        Pass 3 — restore the Devanagari substitutions.
+
+        Example:
+          Input:  "for loop iterate karta hai ke upar array ka integers."
+          Map:    {"for loop": "फ़ॉर लूप", "array": "ऐरे", "integers": "इंटीजर्स"}
+          Output: "फ़ॉर लूप इटरेट करता है के ऊपर ऐरे का इंटीजर्स।"
         """
-        try:
-            from indic_transliteration import sanscript
-            from indic_transliteration.sanscript import transliterate
-            
-            if to_script == "roman":
-                return transliterate(text, sanscript.DEVANAGARI, sanscript.ITRANS)
-            else:
-                return transliterate(text, sanscript.ITRANS, sanscript.DEVANAGARI)
-                
-        except ImportError:
-            # Fall back to simple transliteration
-            if to_script == "roman":
-                return self.devanagari_roman_map(text)
-            else:
-                return self.roman_to_devanagari_simple(text)
+        placeholders: Dict[str, str] = {}
+
+        def stash(devanagari_form: str) -> str:
+            key = f"\x00{len(placeholders)}\x00"
+            placeholders[key] = devanagari_form
+            return key
+
+        # Pass 1: longest terms first to avoid partial matches
+        # ("for loop" must match before "loop")
+        result = text
+        for term, deva_form in sorted(term_devanagari_map.items(),
+                                      key=lambda x: len(x[0]), reverse=True):
+            pattern = re.compile(
+                r'(?<![^\s\x00])' + re.escape(term) + r'(?![^\s\x00.,!?;:])',
+                re.IGNORECASE
+            )
+            result = pattern.sub(lambda _m, d=deva_form: stash(d), result)
+
+        # Pass 2: ITRANS-transliterate remaining Hindi Roman words
+        result = self.roman_to_devanagari(result)
+
+        # Pass 3: restore the Devanagari phonetic forms
+        for key, deva_form in placeholders.items():
+            result = result.replace(key, deva_form)
+
+        return result
+
+    def _transliterate_devanagari_spans(self, text: str) -> str:
+        """
+        Convert only Devanagari runs in a mixed string to ITRANS Roman,
+        leaving Latin tokens untouched.
+        """
+        parts = re.split(r'([\u0900-\u097F]+)', text)
+        return ''.join(
+            self.devanagari_to_roman(p) if re.search(r'[\u0900-\u097F]', p) else p
+            for p in parts
+        )

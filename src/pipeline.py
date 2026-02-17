@@ -100,18 +100,25 @@ class InglishtranslationPipeline:
             print(f"[5] Final: {final_text}")
         
         # Step 6: Generate outputs in requested formats
+        # Build {term_lower: phonetic_devanagari} from extracted terms.
+        # extract_terms() returns (term_text, devanagari, start, end) 4-tuples.
+        term_devanagari_map = {
+            t[0].lower(): t[1] for t in terms if t[1]
+        }
+
         result = {"original_english": text}
-        
+
         if self.config.output_format in ["roman", "both"]:
-            # If translated text is in Devanagari, convert to Roman
             result["hinglish_roman"] = self.script_converter.convert_mixed_text(
                 final_text, to_format="roman"
             )
-        
+
         if self.config.output_format in ["devanagari", "both"]:
-            # If translated text is in Roman, keep/convert to Devanagari
+            # Pass glossary Devanagari forms so English terms are rendered
+            # phonetically in Devanagari, not mangled by ITRANS.
             result["hinglish_devanagari"] = self.script_converter.convert_mixed_text(
-                final_text, to_format="devanagari"
+                final_text, to_format="devanagari",
+                term_devanagari_map=term_devanagari_map
             )
         
         # Add metadata

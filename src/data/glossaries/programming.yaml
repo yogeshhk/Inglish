@@ -1,132 +1,264 @@
 # Programming Domain Glossary
-# Technical terms to preserve in English
+# Technical terms to preserve in English, with phonetic Devanagari rendering
 
 domain: programming
 language_pair: "en_hi"
-version: "1.0"
+version: "1.1"
 
 # Single-word technical terms
+# 'devanagari' = how the term sounds when spoken naturally in Hinglish
 terms:
   - term: "variable"
     preserve: true
+    devanagari: "???????"
     context: "data storage element"
-    
+
   - term: "function"
     preserve: true
+    devanagari: "???????"
     context: "reusable code block"
-    
+
   - term: "class"
     preserve: true
+    devanagari: "?????"
     context: "object template"
-    
+
   - term: "object"
     preserve: true
+    devanagari: "????????"
     context: "instance of a class"
-    
+
   - term: "array"
     preserve: true
+    devanagari: "???"
     context: "sequence container"
-    
+
   - term: "loop"
     preserve: true
+    devanagari: "???"
     context: "iteration construct"
-    
+
   - term: "method"
     preserve: true
+    devanagari: "????"
     context: "function in a class"
-    
+
   - term: "parameter"
     preserve: true
+    devanagari: "????????"
     context: "function input"
-    
+
   - term: "argument"
     preserve: true
+    devanagari: "???????????"
     context: "function input value"
-    
+
   - term: "return"
     preserve: true
+    devanagari: "??????"
     context: "function output"
-    
+
   - term: "string"
     preserve: true
+    devanagari: "????????"
     context: "text data type"
-    
+
   - term: "integer"
     preserve: true
+    devanagari: "??????"
     context: "whole number type"
-    
+
+  - term: "integers"
+    preserve: true
+    devanagari: "????????"
+    context: "plural of integer"
+
   - term: "boolean"
     preserve: true
+    devanagari: "??????"
     context: "true/false type"
-    
+
   - term: "list"
     preserve: true
+    devanagari: "?????"
     context: "collection type"
-    
+
   - term: "dictionary"
     preserve: true
+    devanagari: "????????"
     context: "key-value store"
-    
+
   - term: "tuple"
     preserve: true
+    devanagari: "??????"
     context: "immutable sequence"
-    
+
   - term: "set"
     preserve: true
+    devanagari: "???"
     context: "unique collection"
-    
+
   - term: "iterator"
     preserve: true
+    devanagari: "??????"
     context: "iteration object"
-    
+
   - term: "index"
     preserve: true
+    devanagari: "???????"
     context: "position in sequence"
-    
+
   - term: "key"
     preserve: true
+    devanagari: "??"
     context: "dictionary key"
-    
+
   - term: "value"
     preserve: true
+    devanagari: "??????"
     context: "data value"
-    
+
   - term: "instance"
     preserve: true
+    devanagari: "????????"
     context: "object instance"
-    
+
   - term: "inheritance"
     preserve: true
-    context: "OOP concept"
-    
-  - term: "polymorphism"
-    preserve: true
-    context: "OOP concept"
-    
-  - term: "encapsulation"
-    preserve: true
+    devanagari: "??????????"
     context: "OOP concept"
 
-# Multi-word compound terms (preserve as complete phrases)
+  - term: "polymorphism"
+    preserve: true
+    devanagari: "???????????????"
+    context: "OOP concept"
+
+  - term: "encapsulation"
+    preserve: true
+    devanagari: "????????????"
+    context: "OOP concept"
+
+  - term: "condition"
+    preserve: true
+    devanagari: "??????"
+    context: "boolean expression"
+
+  - term: "exception"
+    preserve: true
+    devanagari: "?????????"
+    context: "error handling"
+
+  - term: "module"
+    preserve: true
+    devanagari: "???????"
+    context: "code unit"
+
+  - term: "interface"
+    preserve: true
+    devanagari: "????????"
+    context: "contract definition"
+
+  - term: "compiler"
+    preserve: true
+    devanagari: "???????"
+    context: "code compiler"
+
+  - term: "pointer"
+    preserve: true
+    devanagari: "??????"
+    context: "memory address"
+
+  - term: "stack"
+    preserve: true
+    devanagari: "?????"
+    context: "LIFO data structure"
+
+  - term: "queue"
+    preserve: true
+    devanagari: "????"
+    context: "FIFO data structure"
+
+  - term: "node"
+    preserve: true
+    devanagari: "???"
+    context: "graph/tree element"
+
+  - term: "algorithm"
+    preserve: true
+    devanagari: "?????????"
+    context: "step-by-step procedure"
+
+  - term: "debug"
+    preserve: true
+    devanagari: "????"
+    context: "find and fix errors"
+
+  - term: "error"
+    preserve: true
+    devanagari: "???"
+    context: "program error"
+
+# Multi-word compound terms (matched and replaced as complete phrases)
 compound_terms:
-  - "for loop"
-  - "while loop"
-  - "if statement"
-  - "else statement"
-  - "elif statement"
-  - "member variable"
-  - "class variable"
-  - "instance variable"
-  - "local variable"
-  - "global variable"
-  - "data type"
-  - "return type"
-  - "function call"
-  - "method call"
-  - "object oriented"
-  - "object-oriented programming"
-  - "source code"
-  - "syntax error"
-  - "runtime error"
-  - "compile time"
-  - "run time"
+  - term: "for loop"
+    devanagari: "???? ???"
+
+  - term: "while loop"
+    devanagari: "???? ???"
+
+  - term: "if statement"
+    devanagari: "??? ?????????"
+
+  - term: "else statement"
+    devanagari: "???? ?????????"
+
+  - term: "elif statement"
+    devanagari: "????? ?????????"
+
+  - term: "member variable"
+    devanagari: "????? ???????"
+
+  - term: "class variable"
+    devanagari: "????? ???????"
+
+  - term: "instance variable"
+    devanagari: "???????? ???????"
+
+  - term: "local variable"
+    devanagari: "???? ???????"
+
+  - term: "global variable"
+    devanagari: "?????? ???????"
+
+  - term: "data type"
+    devanagari: "???? ????"
+
+  - term: "return type"
+    devanagari: "?????? ????"
+
+  - term: "function call"
+    devanagari: "??????? ???"
+
+  - term: "method call"
+    devanagari: "???? ???"
+
+  - term: "object oriented"
+    devanagari: "???????? ????????"
+
+  - term: "object-oriented programming"
+    devanagari: "???????? ???????? ????????????"
+
+  - term: "source code"
+    devanagari: "????? ???"
+
+  - term: "syntax error"
+    devanagari: "???????? ???"
+
+  - term: "runtime error"
+    devanagari: "?????? ???"
+
+  - term: "compile time"
+    devanagari: "?????? ????"
+
+  - term: "run time"
+    devanagari: "?? ????"
