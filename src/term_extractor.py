@@ -4,13 +4,17 @@ import re
 from typing import List, Tuple, Dict
 from utils import load_glossary, load_patterns, resolve_overlapping_spans
 
+# Characters that are stripped when checking a word against the glossary
+# and must NOT be included inside the guard brackets.
+_PUNCT = '.,!?;:()'
+
 
 class TermExtractor:
     """
     Extract and guard technical terms from English text.
 
     extract_terms() returns List[Tuple[str, str, int, int]] where:
-      [0] term_text    : matched term as it appears in the input
+      [0] term_text    : matched term as it appears in the input (no trailing punct)
       [1] devanagari   : phonetic Devanagari form from the glossary ('' if absent)
       [2] start        : character start index in original text
       [3] end          : character end index in original text
@@ -142,7 +146,7 @@ class TermExtractor:
             j = i
 
             while j < len(words):
-                word = words[j].lower().strip('.,!?;:()')
+                word = words[j].lower().strip(_PUNCT)
                 if word in node:
                     node = node[word]
                     match_words.append(words[j])
@@ -160,16 +164,27 @@ class TermExtractor:
         return matches
 
     def _extract_single_terms(self, text: str) -> List[Tuple[str, int, int]]:
+        """
+        Match single glossary terms against whitespace-split tokens.
+
+        Bug fixed: previously ``end`` was computed from ``len(word)`` where
+        ``word`` still carries trailing punctuation (e.g. "integers."), causing
+        the period to be swallowed inside the guard brackets.  We now compute
+        the span end from ``len(clean)`` so that only the bare term text is
+        bracketed; punctuation remains outside in the original position.
+        """
         matches = []
         words = text.split()
 
         for i, word in enumerate(words):
-            clean = word.lower().strip('.,!?;:()')
+            clean = word.lower().strip(_PUNCT)
             if clean in self.single_terms:
                 prefix = ' '.join(words[:i])
                 start = len(prefix) + (1 if prefix else 0)
-                end = start + len(word)
-                matches.append((word, start, end))
+                # Use len(clean) so trailing/leading punctuation stays outside
+                # the bracket span.
+                end = start + len(clean)
+                matches.append((clean, start, end))
 
         return matches
 

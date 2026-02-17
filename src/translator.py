@@ -1,6 +1,7 @@
 """Translation modules for converting English to Indian languages."""
 
 import re
+import sys
 from typing import Dict, Optional
 from abc import ABC, abstractmethod
 
@@ -111,18 +112,22 @@ class BaselineTranslator(BaseTranslator):
             'before': 'pehle',
             
             # Common nouns (non-technical)
-            'value': 'value',
             'number': 'number',
             'name': 'naam',
             'time': 'samay',
             'way': 'tarika',
         }
         
-        # Simple grammar rules
+        # Grammar rules applied AFTER protected terms are restored so that
+        # they match the actual [bracket] syntax, not the __PROTECTED_N__
+        # placeholders that exist during the word-translation phase.
+        #
+        # Rule format: (search_pattern, replacement)
+        # These reorder common English constructions into natural Hindi word order.
         self.grammar_rules = [
-            # "X of Y" -> "Y ka X"
+            # "X of Y" -> "Y ka X"  e.g. "[array] of [integers]" -> "[integers] ka [array]"
             (r'\[([^\]]+)\] of \[([^\]]+)\]', r'[\2] ka [\1]'),
-            # "X in Y" -> "Y mein X"
+            # "X in Y" -> "Y mein X"  e.g. "[loop] in [function]" -> "[function] mein [loop]"
             (r'\[([^\]]+)\] in \[([^\]]+)\]', r'[\2] mein [\1]'),
         ]
     
@@ -131,12 +136,18 @@ class BaselineTranslator(BaseTranslator):
         Simple rule-based translation.
         
         Strategy:
-        1. Split into words
-        2. Translate each word using dictionary
-        3. Keep bracketed terms unchanged
-        4. Apply simple grammar rules
+        1. Apply grammar rules to bracketed terms BEFORE translating,
+           while the [bracket] syntax is still intact.
+        2. Protect bracketed terms with placeholders.
+        3. Translate each remaining word using the dictionary.
+        4. Restore placeholders.
         """
-        # Protect bracketed terms
+        # Step 1: Apply grammar reordering rules while [brackets] are present
+        reordered = text
+        for pattern, replacement in self.grammar_rules:
+            reordered = re.sub(pattern, replacement, reordered)
+
+        # Step 2: Protect bracketed terms so word translation leaves them alone
         bracketed_pattern = r'\[([^\]]+)\]'
         protected_terms = {}
         
@@ -146,14 +157,14 @@ class BaselineTranslator(BaseTranslator):
             protected_terms[placeholder] = match.group(0)
             return placeholder
         
-        protected_text = re.sub(bracketed_pattern, protect_term, text)
+        protected_text = re.sub(bracketed_pattern, protect_term, reordered)
         
-        # Translate word by word
+        # Step 3: Translate word by word
         words = protected_text.split()
         translated_words = []
         
         for word in words:
-            # Check if it's a protected term
+            # Check if it's a protected term placeholder
             if word in protected_terms:
                 translated_words.append(word)
                 continue
@@ -173,11 +184,7 @@ class BaselineTranslator(BaseTranslator):
         # Join translated words
         result = ' '.join(translated_words)
         
-        # Apply grammar rules
-        for pattern, replacement in self.grammar_rules:
-            result = re.sub(pattern, replacement, result)
-        
-        # Restore protected terms
+        # Step 4: Restore protected terms
         for placeholder, term in protected_terms.items():
             result = result.replace(placeholder, term)
         
@@ -189,15 +196,17 @@ class BaselineTranslator(BaseTranslator):
 
 class LLMTranslator(BaseTranslator):
     """
-    LLM-based translator using OpenAI or Anthropic APIs.
+    LLM-based translator using the OpenAI API (v1.x client).
+    Falls back to BaselineTranslator if the package is unavailable or the
+    API call fails.
     """
     
-    def __init__(self, target_language: str = "hi", model: str = "gpt-3.5-turbo", 
-                 api_key: Optional[str] = None):
+    def __init__(self, target_language: str = "hi", model: str = "gpt-3.5-turbo",
+                 api_key: Optional[str] = None, temperature: float = 0.3):
         super().__init__(target_language)
         self.model = model
         self.api_key = api_key
-        self.temperature = 0.3
+        self.temperature = temperature
         
         # Language name mapping
         self.lang_names = {
@@ -212,20 +221,24 @@ class LLMTranslator(BaseTranslator):
         """
         Translate using LLM with constraint prompting.
         
-        Note: This requires API keys to be set. Falls back to baseline if not available.
+        Requires openai>=1.0 and a valid API key.  Falls back to
+        BaselineTranslator when either is missing.
         """
         try:
             import openai
-            
+
             if not self.api_key:
-                print("Warning: No API key provided. Falling back to baseline translation.")
-                baseline = BaselineTranslator(self.target_language)
-                return baseline.translate(text)
-            
-            openai.api_key = self.api_key
-            
+                print(
+                    "Warning: No API key provided. Falling back to baseline translation.",
+                    file=sys.stderr,
+                )
+                return BaselineTranslator(self.target_language).translate(text)
+
+            # openai >= 1.0 API
+            client = openai.OpenAI(api_key=self.api_key)
+
             lang_name = self.lang_names.get(self.target_language, 'Hindi')
-            
+
             system_prompt = f"""You are an expert technical translator to {lang_name}.
 
 CRITICAL RULES:
@@ -241,29 +254,33 @@ Example:
 Input: "The [for loop] iterates over the [array]."
 Output: "[for loop] [array] के ऊपर iterate करता है।"
 """
-            
-            user_prompt = f"""Translate to {lang_name}:
-"{text}"
 
-Remember: Keep all [bracketed] content exactly as-is."""
-            
-            response = openai.ChatCompletion.create(
+            user_prompt = (
+                f'Translate to {lang_name}:\n"{text}"\n\n'
+                "Remember: Keep all [bracketed] content exactly as-is."
+            )
+
+            response = client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_prompt},
                 ],
                 temperature=self.temperature,
-                max_tokens=len(text.split()) * 3
+                max_tokens=len(text.split()) * 3,
             )
-            
+
             return response.choices[0].message.content.strip()
-            
+
         except ImportError:
-            print("Warning: OpenAI package not installed. Falling back to baseline.")
-            baseline = BaselineTranslator(self.target_language)
-            return baseline.translate(text)
+            print(
+                "Warning: openai package not installed. Falling back to baseline.",
+                file=sys.stderr,
+            )
+            return BaselineTranslator(self.target_language).translate(text)
         except Exception as e:
-            print(f"Warning: LLM translation failed ({e}). Falling back to baseline.")
-            baseline = BaselineTranslator(self.target_language)
-            return baseline.translate(text)
+            print(
+                f"Warning: LLM translation failed ({e}). Falling back to baseline.",
+                file=sys.stderr,
+            )
+            return BaselineTranslator(self.target_language).translate(text)

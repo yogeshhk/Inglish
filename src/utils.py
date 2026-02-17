@@ -6,28 +6,59 @@ import json
 from typing import Dict, List, Tuple, Any
 from pathlib import Path
 
+# Root of the project is two levels above this file:
+#   <project_root>/src/utils.py  ->  _SRC_DIR = <project_root>/src
+#   <project_root>/data/...
+# If the layout is flat (all files in one directory) _SRC_DIR and _PROJECT_ROOT
+# point to the same place, and data/ is looked up relative to that directory.
+_SRC_DIR = Path(__file__).parent
+_PROJECT_ROOT = _SRC_DIR.parent
+
+
+def _resolve_data_path(relative: str) -> Path:
+    """
+    Resolve a data path relative to the project root.
+
+    Searches two candidate locations so the helper works both with the
+    canonical src/ layout (data/ sits beside src/) and with a flat layout
+    where all files share one directory:
+
+      1. <project_root> / relative        e.g. <root>/data/glossaries/programming.yaml
+      2. <src_dir>      / relative        e.g. <src>/data/glossaries/programming.yaml
+
+    Returns the first path that exists, or the canonical location (1) as a
+    fallback so that the caller receives a meaningful FileNotFoundError message.
+    """
+    for base in (_PROJECT_ROOT, _SRC_DIR):
+        candidate = base / relative
+        if candidate.exists():
+            return candidate
+    # Return the canonical path even though it doesn't exist; the caller will
+    # raise FileNotFoundError with a useful message.
+    return _PROJECT_ROOT / relative
+
 
 def load_glossary(domain: str, glossary_dir: str = "data/glossaries") -> Dict[str, Any]:
     """Load domain-specific glossary from YAML file."""
-    glossary_path = Path(glossary_dir) / f"{domain}.yaml"
-    
+    glossary_path = _resolve_data_path(f"{glossary_dir}/{domain}.yaml")
+
     if not glossary_path.exists():
         raise FileNotFoundError(f"Glossary not found: {glossary_path}")
-    
+
     with open(glossary_path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
 
-def load_patterns(domain: str, pattern_dir: str = "data/patterns") -> Dict[str, List[str]]:
+def load_patterns(domain: str, pattern_dir: str = "data/patterns") -> List:
     """Load regex patterns for term detection."""
-    pattern_path = Path(pattern_dir) / "regex_patterns.json"
-    
+    pattern_path = _resolve_data_path(f"{pattern_dir}/regex_patterns.json")
+
     if not pattern_path.exists():
-        return {"programming": [], "physics": [], "finance": []}
-    
+        return []
+
     with open(pattern_path, 'r', encoding='utf-8') as f:
         all_patterns = json.load(f)
-    
+
     return all_patterns.get(domain, [])
 
 

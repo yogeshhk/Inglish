@@ -48,7 +48,8 @@ class InglishtranslationPipeline:
             self.translator = LLMTranslator(
                 target_language=config.target_language,
                 model=config.llm_model,
-                api_key=config.llm_api_key
+                api_key=config.llm_api_key,
+                temperature=config.temperature,
             )
         else:
             self.translator = BaselineTranslator(
@@ -154,8 +155,8 @@ class InglishtranslationPipeline:
         
         return results
     
-    def evaluate_quality(self, original: str, translated: str, 
-                        reference: Optional[str] = None) -> Dict[str, float]:
+    def evaluate_quality(self, original: str, translated: str,
+                         reference: Optional[str] = None) -> Dict[str, float]:
         """
         Evaluate translation quality.
         
@@ -167,8 +168,6 @@ class InglishtranslationPipeline:
         Returns:
             Dictionary of quality metrics
         """
-        from utils import extract_bracketed_terms
-        
         metrics = {}
         
         # Constraint preservation
@@ -177,7 +176,7 @@ class InglishtranslationPipeline:
         
         # Check if technical terms are preserved in translation
         preserved_count = sum(
-            1 for term in original_term_set 
+            1 for term in original_term_set
             if term.lower() in translated.lower()
         )
         

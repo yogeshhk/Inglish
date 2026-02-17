@@ -6,8 +6,10 @@ Example usage of the Inglish Translation Pipeline.
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Add the directory containing this file to sys.path so that pipeline.py
+# and its siblings (term_extractor, translator, etc.) can be imported
+# regardless of the working directory the script is launched from.
+sys.path.insert(0, str(Path(__file__).parent))
 
 from pipeline import InglishtranslationPipeline, TranslationConfig
 

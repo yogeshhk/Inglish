@@ -10,255 +10,255 @@ version: "1.1"
 terms:
   - term: "variable"
     preserve: true
-    devanagari: "???????"
+    devanagari: "वेरिएबल"
     context: "data storage element"
 
   - term: "function"
     preserve: true
-    devanagari: "???????"
+    devanagari: "फंक्शन"
     context: "reusable code block"
 
   - term: "class"
     preserve: true
-    devanagari: "?????"
+    devanagari: "क्लास"
     context: "object template"
 
   - term: "object"
     preserve: true
-    devanagari: "????????"
+    devanagari: "ऑब्जेक्ट"
     context: "instance of a class"
 
   - term: "array"
     preserve: true
-    devanagari: "???"
+    devanagari: "ऐरे"
     context: "sequence container"
 
   - term: "loop"
     preserve: true
-    devanagari: "???"
+    devanagari: "लूप"
     context: "iteration construct"
 
   - term: "method"
     preserve: true
-    devanagari: "????"
+    devanagari: "मेथड"
     context: "function in a class"
 
   - term: "parameter"
     preserve: true
-    devanagari: "????????"
+    devanagari: "पैरामीटर"
     context: "function input"
 
   - term: "argument"
     preserve: true
-    devanagari: "???????????"
+    devanagari: "आर्ग्युमेंट"
     context: "function input value"
 
   - term: "return"
     preserve: true
-    devanagari: "??????"
+    devanagari: "रिटर्न"
     context: "function output"
 
   - term: "string"
     preserve: true
-    devanagari: "????????"
+    devanagari: "स्ट्रिंग"
     context: "text data type"
 
   - term: "integer"
     preserve: true
-    devanagari: "??????"
+    devanagari: "इंटीजर"
     context: "whole number type"
 
   - term: "integers"
     preserve: true
-    devanagari: "????????"
+    devanagari: "इंटीजर्स"
     context: "plural of integer"
 
   - term: "boolean"
     preserve: true
-    devanagari: "??????"
+    devanagari: "बूलियन"
     context: "true/false type"
 
   - term: "list"
     preserve: true
-    devanagari: "?????"
+    devanagari: "लिस्ट"
     context: "collection type"
 
   - term: "dictionary"
     preserve: true
-    devanagari: "????????"
+    devanagari: "डिक्शनरी"
     context: "key-value store"
 
   - term: "tuple"
     preserve: true
-    devanagari: "??????"
+    devanagari: "टपल"
     context: "immutable sequence"
 
   - term: "set"
     preserve: true
-    devanagari: "???"
+    devanagari: "सेट"
     context: "unique collection"
 
   - term: "iterator"
     preserve: true
-    devanagari: "??????"
+    devanagari: "इटरेटर"
     context: "iteration object"
 
   - term: "index"
     preserve: true
-    devanagari: "???????"
+    devanagari: "इंडेक्स"
     context: "position in sequence"
 
   - term: "key"
     preserve: true
-    devanagari: "??"
+    devanagari: "की"
     context: "dictionary key"
 
   - term: "value"
     preserve: true
-    devanagari: "??????"
+    devanagari: "वैल्यू"
     context: "data value"
 
   - term: "instance"
     preserve: true
-    devanagari: "????????"
+    devanagari: "इन्स्टेंस"
     context: "object instance"
 
   - term: "inheritance"
     preserve: true
-    devanagari: "??????????"
+    devanagari: "इनहेरिटेंस"
     context: "OOP concept"
 
   - term: "polymorphism"
     preserve: true
-    devanagari: "???????????????"
+    devanagari: "पॉलीमॉर्फिज्म"
     context: "OOP concept"
 
   - term: "encapsulation"
     preserve: true
-    devanagari: "????????????"
+    devanagari: "एनकैप्सुलेशन"
     context: "OOP concept"
 
   - term: "condition"
     preserve: true
-    devanagari: "??????"
+    devanagari: "कंडीशन"
     context: "boolean expression"
 
   - term: "exception"
     preserve: true
-    devanagari: "?????????"
+    devanagari: "एक्सेप्शन"
     context: "error handling"
 
   - term: "module"
     preserve: true
-    devanagari: "???????"
+    devanagari: "मॉड्यूल"
     context: "code unit"
 
   - term: "interface"
     preserve: true
-    devanagari: "????????"
+    devanagari: "इंटरफेस"
     context: "contract definition"
 
   - term: "compiler"
     preserve: true
-    devanagari: "???????"
+    devanagari: "कम्पाइलर"
     context: "code compiler"
 
   - term: "pointer"
     preserve: true
-    devanagari: "??????"
+    devanagari: "पॉइंटर"
     context: "memory address"
 
   - term: "stack"
     preserve: true
-    devanagari: "?????"
+    devanagari: "स्टैक"
     context: "LIFO data structure"
 
   - term: "queue"
     preserve: true
-    devanagari: "????"
+    devanagari: "क्यू"
     context: "FIFO data structure"
 
   - term: "node"
     preserve: true
-    devanagari: "???"
+    devanagari: "नोड"
     context: "graph/tree element"
 
   - term: "algorithm"
     preserve: true
-    devanagari: "?????????"
+    devanagari: "एल्गोरिदम"
     context: "step-by-step procedure"
 
   - term: "debug"
     preserve: true
-    devanagari: "????"
+    devanagari: "डीबग"
     context: "find and fix errors"
 
   - term: "error"
     preserve: true
-    devanagari: "???"
+    devanagari: "एरर"
     context: "program error"
 
 # Multi-word compound terms (matched and replaced as complete phrases)
 compound_terms:
   - term: "for loop"
-    devanagari: "???? ???"
+    devanagari: "फॉर लूप"
 
   - term: "while loop"
-    devanagari: "???? ???"
+    devanagari: "वाइल लूप"
 
   - term: "if statement"
-    devanagari: "??? ?????????"
+    devanagari: "इफ स्टेटमेंट"
 
   - term: "else statement"
-    devanagari: "???? ?????????"
+    devanagari: "एल्स स्टेटमेंट"
 
   - term: "elif statement"
-    devanagari: "????? ?????????"
+    devanagari: "एलिफ स्टेटमेंट"
 
   - term: "member variable"
-    devanagari: "????? ???????"
+    devanagari: "मेंबर वेरिएबल"
 
   - term: "class variable"
-    devanagari: "????? ???????"
+    devanagari: "क्लास वेरिएबल"
 
   - term: "instance variable"
-    devanagari: "???????? ???????"
+    devanagari: "इन्स्टेंस वेरिएबल"
 
   - term: "local variable"
-    devanagari: "???? ???????"
+    devanagari: "लोकल वेरिएबल"
 
   - term: "global variable"
-    devanagari: "?????? ???????"
+    devanagari: "ग्लोबल वेरिएबल"
 
   - term: "data type"
-    devanagari: "???? ????"
+    devanagari: "डेटा टाइप"
 
   - term: "return type"
-    devanagari: "?????? ????"
+    devanagari: "रिटर्न टाइप"
 
   - term: "function call"
-    devanagari: "??????? ???"
+    devanagari: "फंक्शन कॉल"
 
   - term: "method call"
-    devanagari: "???? ???"
+    devanagari: "मेथड कॉल"
 
   - term: "object oriented"
-    devanagari: "???????? ????????"
+    devanagari: "ऑब्जेक्ट ओरिएंटेड"
 
   - term: "object-oriented programming"
-    devanagari: "???????? ???????? ????????????"
+    devanagari: "ऑब्जेक्ट ओरिएंटेड प्रोग्रामिंग"
 
   - term: "source code"
-    devanagari: "????? ???"
+    devanagari: "सोर्स कोड"
 
   - term: "syntax error"
-    devanagari: "???????? ???"
+    devanagari: "सिंटैक्स एरर"
 
   - term: "runtime error"
-    devanagari: "?????? ???"
+    devanagari: "रनटाइम एरर"
 
   - term: "compile time"
-    devanagari: "?????? ????"
+    devanagari: "कम्पाइल टाइम"
 
   - term: "run time"
-    devanagari: "?? ????"
+    devanagari: "रन टाइम"
