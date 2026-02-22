@@ -1,0 +1,168 @@
+{
+  "dataset_name": "programming_hinglish_eval",
+  "domain": "programming",
+  "language_pair": "en_hi",
+  "size": 20,
+  "samples": [
+    {
+      "id": "prog_eval_001",
+      "english": "The for loop iterates over the array.",
+      "hinglish_roman": "for loop array ke upar iterate karta hai",
+      "hinglish_devanagari": "फॉर लूप ऐरे के ऊपर इटरेट करता है",
+      "technical_terms": ["for loop", "array", "iterate"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_002",
+      "english": "This class has four member variables.",
+      "hinglish_roman": "is class mein chaar member variables hain",
+      "hinglish_devanagari": "इस क्लास में चार मेंबर व्हेरिएबल्स हैं",
+      "technical_terms": ["class", "member variables"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_003",
+      "english": "The function returns a boolean value.",
+      "hinglish_roman": "function ek boolean value return karta hai",
+      "hinglish_devanagari": "फंक्शन एक बूलियन व्हॅल्यू रिटर्न करता है",
+      "technical_terms": ["function", "boolean", "value", "return"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_004",
+      "english": "Each object has its own instance variables.",
+      "hinglish_roman": "har object ke apne instance variables hote hain",
+      "hinglish_devanagari": "हर ऑब्जेक्ट के अपने इन्स्टन्स व्हेरिएबल्स होते हैं",
+      "technical_terms": ["object", "instance variables"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_005",
+      "english": "The if statement checks the condition first.",
+      "hinglish_roman": "if statement pehle condition check karta hai",
+      "hinglish_devanagari": "इफ स्टेटमेंट पहले कंडिशन चेक करता है",
+      "technical_terms": ["if statement", "condition"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_006",
+      "english": "Inheritance allows code reuse in object-oriented programming.",
+      "hinglish_roman": "inheritance object-oriented programming mein code reuse ki anumati deta hai",
+      "hinglish_devanagari": "इन्हेरीटन्स ऑब्जेक्ट-ओरिएंटेड प्रोग्रामिंग में कोड रियूझ की अनुमति देता है",
+      "technical_terms": ["inheritance", "code", "reuse", "object-oriented programming"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_007",
+      "english": "The method takes two parameters and returns their sum.",
+      "hinglish_roman": "method do parameters leta hai aur unka sum return karta hai",
+      "hinglish_devanagari": "मेथड दो पॅरामीटर्स लेता है और उनका सम रिटर्न करता है",
+      "technical_terms": ["method", "parameters", "return"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_008",
+      "english": "Arrays store multiple values of the same data type.",
+      "hinglish_roman": "arrays same data type ki multiple values store karte hain",
+      "hinglish_devanagari": "ऐरेज़ सामान डेटा टाईप की एक से ज्यादा व्हॅल्यूझ ईकट्ठा करते हैं",
+      "technical_terms": ["arrays", "values", "data type"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_009",
+      "english": "The while loop continues until the condition becomes false.",
+      "hinglish_roman": "while loop tab tak continue karta hai jab tak condition false nahi ho jati",
+      "hinglish_devanagari": "वाइल लूप तब तक चलता है जब तक कंडिशन फाल्स नहीं हो जाती",
+      "technical_terms": ["while loop", "condition", "false"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_010",
+      "english": "Local variables are accessible only within the function.",
+      "hinglish_roman": "local variables sirf function ke andar accessible hote hain",
+      "hinglish_devanagari": "लोकल व्हेरिएबल्स सिर्फ फंक्शन के अंदर उपलब्ध होते हैं",
+      "technical_terms": ["local variables", "function"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_011",
+      "english": "Strings are immutable in Python.",
+      "hinglish_roman": "strings Python mein immutable hote hain",
+      "hinglish_devanagari": "स्ट्रिंग्स पायथन में इम्यूटेबल होते हैं",
+      "technical_terms": ["strings", "immutable", "Python"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_012",
+      "english": "The dictionary stores key-value pairs.",
+      "hinglish_roman": "dictionary key-value pairs store karta hai",
+      "hinglish_devanagari": "डिक्शनरी की-व्हॅल्यू पेअर्स स्टोअर करता है",
+      "technical_terms": ["dictionary", "key-value pairs"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_013",
+      "english": "Exception handling prevents runtime errors.",
+      "hinglish_roman": "exception handling runtime errors ko rokta hai",
+      "hinglish_devanagari": "एक्सेप्शन हँडलिंग रनटाईम एरर्स को रोकता है",
+      "technical_terms": ["exception handling", "runtime errors"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_014",
+      "english": "The index starts from zero in most programming languages.",
+      "hinglish_roman": "index zyada tar programming languages mein zero se shuru hota hai",
+      "hinglish_devanagari": "इंडेक्स ज़्यादातर प्रोग्रामिंग लँग्वेजेस में शून्य से शुरू होता है",
+      "technical_terms": ["index", "programming languages"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_015",
+      "english": "Polymorphism allows methods to behave differently based on the object.",
+      "hinglish_roman": "polymorphism methods ko object ke aadhaar par alag behave karne ki anumati deta hai",
+      "hinglish_devanagari": "पौलीमॉर्फिझम मेथड्स को ऑब्जेक्ट के आधार पर अलग बरताव करने की अनुमति देता है",
+      "technical_terms": ["polymorphism", "methods", "object"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_016",
+      "english": "The break statement exits the loop immediately.",
+      "hinglish_roman": "break statement loop se turant bahar nikal jata hai",
+      "hinglish_devanagari": "ब्रेक स्टेटमेंट लूप से तुरंत बाहर निकल जाता है",
+      "technical_terms": ["break statement", "loop"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_017",
+      "english": "Global variables can be accessed from anywhere in the program.",
+      "hinglish_roman": "global variables program mein kahin se bhi access kiye ja sakte hain",
+      "hinglish_devanagari": "ग्लोबल व्हेरिएबल्स प्रोग्राम में कहीं से भी एक्सेस किये जा सकते हैं",
+      "technical_terms": ["global variables", "program"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_018",
+      "english": "The constructor initializes the object when it is created.",
+      "hinglish_roman": "constructor object ko initialize karta hai jab voh create hota hai",
+      "hinglish_devanagari": "कंस्ट्रक्टर ऑब्जेक्ट को इनिशिअलाईझ करता है जब वो क्रिएट होता है",
+      "technical_terms": ["constructor", "object", "initialize"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_019",
+      "english": "Recursion is when a function calls itself.",
+      "hinglish_roman": "recursion tab hota hai jab function khud ko call karta hai",
+      "hinglish_devanagari": "रिकर्शन तब होता है जब फंक्शन खुद को कॉल करता है",
+      "technical_terms": ["recursion", "function"],
+      "domain": "programming"
+    },
+    {
+      "id": "prog_eval_020",
+      "english": "Comments help explain the source code to other developers.",
+      "hinglish_roman": "comments source code ko dusre developers ko samjhane mein madad karte hain",
+      "hinglish_devanagari": "कमेंट्स सोर्स कोड को दूसरे डेव्हलपर्स को समझाने में मदद करते हैं",
+      "technical_terms": ["comments", "source code", "developers"],
+      "domain": "programming"
+    }
+  ]
+}

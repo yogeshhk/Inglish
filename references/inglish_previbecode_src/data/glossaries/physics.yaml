@@ -1,0 +1,156 @@
+# Physics Domain Glossary
+# Technical terms to preserve in English
+
+domain: physics
+language_pair: "en_hi"
+version: "1.0"
+
+# Single-word technical terms
+terms:
+  - term: "force"
+    preserve: true
+    context: "push or pull on an object"
+
+  - term: "mass"
+    preserve: true
+    context: "amount of matter in an object"
+
+  - term: "velocity"
+    preserve: true
+    context: "speed with direction"
+
+  - term: "acceleration"
+    preserve: true
+    context: "rate of change of velocity"
+
+  - term: "momentum"
+    preserve: true
+    context: "mass times velocity"
+
+  - term: "energy"
+    preserve: true
+    context: "capacity to do work"
+
+  - term: "work"
+    preserve: true
+    context: "force times displacement"
+
+  - term: "power"
+    preserve: true
+    context: "rate of doing work"
+
+  - term: "pressure"
+    preserve: true
+    context: "force per unit area"
+
+  - term: "temperature"
+    preserve: true
+    context: "measure of thermal energy"
+
+  - term: "wavelength"
+    preserve: true
+    context: "distance between wave peaks"
+
+  - term: "frequency"
+    preserve: true
+    context: "number of cycles per second"
+
+  - term: "amplitude"
+    preserve: true
+    context: "maximum wave displacement"
+
+  - term: "voltage"
+    preserve: true
+    context: "electric potential difference"
+
+  - term: "current"
+    preserve: true
+    context: "flow of electric charge"
+
+  - term: "resistance"
+    preserve: true
+    context: "opposition to current flow"
+
+  - term: "charge"
+    preserve: true
+    context: "electric property of matter"
+
+  - term: "field"
+    preserve: true
+    context: "region of influence (electric/magnetic)"
+
+  - term: "gravity"
+    preserve: true
+    context: "attractive force between masses"
+
+  - term: "friction"
+    preserve: true
+    context: "resistive force between surfaces"
+
+  - term: "density"
+    preserve: true
+    context: "mass per unit volume"
+
+  - term: "displacement"
+    preserve: true
+    context: "change in position"
+
+  - term: "torque"
+    preserve: true
+    context: "rotational force"
+
+  - term: "inertia"
+    preserve: true
+    context: "resistance to change in motion"
+
+  - term: "entropy"
+    preserve: true
+    context: "measure of disorder in a system"
+
+  - term: "photon"
+    preserve: true
+    context: "particle of light"
+
+  - term: "electron"
+    preserve: true
+    context: "negatively charged subatomic particle"
+
+  - term: "proton"
+    preserve: true
+    context: "positively charged subatomic particle"
+
+  - term: "neutron"
+    preserve: true
+    context: "neutral subatomic particle"
+
+  - term: "nucleus"
+    preserve: true
+    context: "central part of an atom"
+
+# Multi-word compound terms (preserve as complete phrases)
+compound_terms:
+  - "kinetic energy"
+  - "potential energy"
+  - "Newton's law"
+  - "Ohm's law"
+  - "electric field"
+  - "magnetic field"
+  - "electromagnetic wave"
+  - "wave-particle duality"
+  - "center of mass"
+  - "center of gravity"
+  - "angular momentum"
+  - "angular velocity"
+  - "free fall"
+  - "terminal velocity"
+  - "simple harmonic motion"
+  - "thermal equilibrium"
+  - "specific heat"
+  - "refractive index"
+  - "total internal reflection"
+  - "nuclear fission"
+  - "nuclear fusion"
+  - "speed of light"
+  - "gravitational potential"
+  - "electric potential"
+  - "magnetic flux"
