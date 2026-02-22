@@ -26,20 +26,20 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background: #0d1117;
-    color: #e6edf3;
+    background: #ffffff;
+    color: #1a1a1a;
 }
 
 section[data-testid="stSidebar"] {
-    background: #161b22;
-    border-right: 1px solid #21262d;
+    background: #f8f9fa;
+    border-right: 1px solid #e9ecef;
 }
 
 section[data-testid="stSidebar"] .stMarkdown p,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] .stSelectbox label,
 section[data-testid="stSidebar"] .stRadio label {
-    color: #8b949e !important;
+    color: #495057 !important;
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -47,7 +47,7 @@ section[data-testid="stSidebar"] .stRadio label {
 }
 
 section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
-    color: #c9d1d9 !important;
+    color: #1a1a1a !important;
     text-transform: none;
     letter-spacing: 0;
     font-size: 0.92rem;
@@ -55,26 +55,23 @@ section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
 }
 
 section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: #ffffff;
+    border: 1px solid #ced4da;
     border-radius: 8px;
-    color: #c9d1d9;
+    color: #1a1a1a;
 }
 
 .main-title {
     font-family: 'Sora', sans-serif;
     font-size: 2.1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 50%, #ff7b72 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #1a1a1a;
     margin-bottom: 0.15rem;
     line-height: 1.2;
 }
 
 .main-subtitle {
-    color: #8b949e;
+    color: #6c757d;
     font-size: 0.9rem;
     margin-bottom: 2rem;
     font-weight: 300;
@@ -86,15 +83,15 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8b949e;
+    color: #495057;
     margin-bottom: 0.4rem;
 }
 
 .stTextArea textarea {
-    background: #161b22 !important;
-    border: 1px solid #30363d !important;
+    background: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
     border-radius: 10px !important;
-    color: #e6edf3 !important;
+    color: #1a1a1a !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.88rem !important;
     line-height: 1.6 !important;
@@ -103,19 +100,19 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
 }
 
 .stTextArea textarea:focus {
-    border-color: #58a6ff !important;
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.12) !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12) !important;
 }
 
 .output-box {
-    background: #161b22;
-    border: 1px solid #30363d;
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
     border-radius: 10px;
     padding: 1rem 1.1rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.88rem;
     line-height: 1.7;
-    color: #c9d1d9;
+    color: #1a1a1a;
     min-height: 80px;
     max-height: 150px;
     overflow-y: auto;
@@ -125,11 +122,11 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
 }
 
 .output-box.has-content {
-    border-color: #238636;
+    border-color: #198754;
 }
 
 .output-placeholder {
-    color: #484f58;
+    color: #adb5bd;
     font-style: italic;
     font-family: 'Sora', sans-serif;
     font-size: 0.88rem;
@@ -149,25 +146,25 @@ div[data-testid="column"] .stButton button {
 }
 
 div[data-testid="column"]:first-child .stButton button {
-    background: linear-gradient(135deg, #1f6feb, #388bfd);
+    background: linear-gradient(135deg, #0d6efd, #0d6efd);
     color: #ffffff;
 }
 
 div[data-testid="column"]:first-child .stButton button:hover {
-    background: linear-gradient(135deg, #388bfd, #58a6ff);
+    background: linear-gradient(135deg, #0b5ed7, #0d6efd);
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(56, 139, 253, 0.35);
+    box-shadow: 0 4px 16px rgba(13, 110, 253, 0.35);
 }
 
 div[data-testid="column"]:last-child .stButton button {
-    background: #21262d;
-    color: #8b949e;
-    border: 1px solid #30363d;
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #ced4da;
 }
 
 div[data-testid="column"]:last-child .stButton button:hover {
-    background: #30363d;
-    color: #c9d1d9;
+    background: #e9ecef;
+    color: #1a1a1a;
     transform: translateY(-1px);
 }
 
@@ -181,7 +178,7 @@ div[data-testid="column"]:last-child .stButton button:hover {
 
 .terms-label {
     font-size: 0.72rem;
-    color: #8b949e;
+    color: #495057;
     font-weight: 600;
     letter-spacing: 0.07em;
     text-transform: uppercase;
@@ -190,9 +187,9 @@ div[data-testid="column"]:last-child .stButton button:hover {
 
 .term-pill {
     display: inline-block;
-    background: #1f2937;
-    border: 1px solid #374151;
-    color: #93c5fd;
+    background: #e7f1ff;
+    border: 1px solid #b6d4fe;
+    color: #0d6efd;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.75rem;
     padding: 0.15rem 0.55rem;
@@ -201,20 +198,20 @@ div[data-testid="column"]:last-child .stButton button:hover {
 
 hr {
     border: none;
-    border-top: 1px solid #21262d;
+    border-top: 1px solid #e9ecef;
     margin: 1.5rem 0;
 }
 
 .sidebar-logo {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #58a6ff;
+    color: #0d6efd;
     letter-spacing: -0.02em;
     margin-bottom: 0.2rem;
 }
 .sidebar-tagline {
     font-size: 0.72rem;
-    color: #484f58;
+    color: #adb5bd;
     margin-bottom: 1.5rem;
 }
 
@@ -229,24 +226,22 @@ hr {
     margin-bottom: 0.6rem;
 }
 .status-badge.success {
-    background: rgba(35, 134, 54, 0.15);
-    border: 1px solid #238636;
-    color: #3fb950;
+    background: rgba(25, 135, 84, 0.15);
+    border: 1px solid #198754;
+    color: #198754;
 }
 .status-badge.error {
-    background: rgba(218, 54, 51, 0.12);
-    border: 1px solid #da3633;
-    color: #ff7b72;
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid #dc3545;
+    color: #dc3545;
 }
 .status-badge.info {
-    background: rgba(88, 166, 255, 0.15);
-    border: 1px solid #58a6ff;
-    color: #58a6ff;
+    background: rgba(13, 110, 253, 0.15);
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 LANGUAGE_MAP = {
     "Hindi": "hi",
     "Marathi": "mr",
@@ -302,9 +297,6 @@ with st.sidebar:
         label="Model",
         options=[
             "llama-3.1-8b-instant",
-            "llama-3.1-70b-instant",
-            "mixtral-8x7b-32768",
-            "llama-3-70b-8192",
         ],
         index=0,
         label_visibility="collapsed",

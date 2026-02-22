@@ -28,6 +28,46 @@ class BaseTranslator(ABC):
         """Remove square brackets, keeping the term text."""
         return re.sub(r'\[([^\]]+)\]', r'\1', text)
 
+    def _fix_marathi_roman(self, text: str) -> str:
+        """Replace common Hindi words with Marathi equivalents in Roman script."""
+        replacements = [
+            # Hindi -> Marathi
+            (r'\bkarta hai\b', 'karte'),
+            (r'\bkarti hai\b', 'karte'),
+            (r'\bhai\b', 'ahe'),
+            (r'\bhain\b', 'ahet'),
+            (r'\bke\b', 'cha'),
+            (r'\bko\b', 'la'),
+            (r'\bpar\b', 'vpar'),
+            (r'\bupar\b', 'vpar'),
+            (r'\bke saath\b', 'saath'),
+            (r'\bdo\b', 'don'),
+            (r'\bek\b', 'ek'),
+            (r'\bhar\b', 'prati'),
+        ]
+        for pattern, replacement in replacements:
+            text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+        return text
+
+    def _fix_marathi_devanagari(self, text: str) -> str:
+        """Replace common Hindi words with Marathi equivalents in Devanagari."""
+        replacements = [
+            # Hindi -> Marathi Devanagari
+            (r'करता है', 'करते'),
+            (r'करती है', 'करते'),
+            (r'हैं', 'आहे'),
+            (r'है', 'आहे'),
+            (r'के', 'च्या'),
+            (r'को', 'ला'),
+            (r'पर', 'वर'),
+            (r'के साथ', 'साठ'),
+            (r'द्वारा', 'द्वारे'),
+            (r'एक', 'एक'),
+        ]
+        for pattern, replacement in replacements:
+            text = re.sub(pattern, replacement, text)
+        return text
+
 
 class LLMTranslator(BaseTranslator):
     """
@@ -58,30 +98,37 @@ class LLMTranslator(BaseTranslator):
         lang = self.lang_names.get(self.target_language, 'Hindi')
         script = self.lang_scripts.get(self.target_language, 'Devanagari')
         
-        system_prompt = f"""You are an expert technical translator from English to {lang}.
+        # Language-specific few-shot examples
+        if self.target_language == 'mr':
+            examples = '''
+Input: "The [for loop] iterates over the [array]."
+Output: {{"roman": "for loop array cha vpar iterate karte", "devanagari": "फॉर लूप ऐरे च्या वर iterate करते"}}
 
-TASK: Translate the given English text to {lang} while following these rules CRITICAL:
+Input: "This [class] has four [member variables]."
+Output: {{"roman": "hi class char member variables ahe", "devanagari": "ही क्लास चार मेंबर व्हेरिएबल्स आहे"}}
 
-1. ABSOLUTE RULE - PRESERVE BRACKETS: Any text inside square brackets [like this] must appear WITH EXACTLY THE SAME BRACKETS in your output. DO NOT remove, modify, or add any brackets. The bracketed terms are technical terms that must stay in English.
+Input: "The [function] returns a [boolean] value."
+Output: {{"roman": "function ek boolean value return karte", "devanagari": "फंक्शन एक बूलियन व्हैल्यू return करते"}}
 
-2. TRANSLATE NON-BRACKETED TEXT: Translate only the English text that is NOT inside brackets to {lang}.
+Input: "Each [object] has its own [instance variables]."
+Output: {{"roman": "prati object la apala instance variables ahe", "devanagari": "प्रत्येक ऑब्जेक्ट ला आपला इन्स्टेंस व्हेरिएबल्स आहे"}}
 
-3. GRAMMATICAL COGNIZANCE: When translating text that surrounds bracketed terms:
-   - Use proper {lang} sentence structure (typically SOV - Subject-Object-Verb)
-   - Apply correct gender, case, and number agreement
-   - Use appropriate postpositions instead of English prepositions
-   - Add auxiliary verbs and particles as needed for natural {lang} grammar
+Input: "The [while loop] continues until the [condition] becomes false."
+Output: {{"roman": "while loop such tak chalte jab tak condition false nahi hot", "devanagari": "व्हाइल लूप तेवढा चालतो जोपर्यंत कंडीशन false नाही होत"}}
 
-4. OUTPUT FORMAT: Return a JSON object with exactly these two fields:
-   - "roman": Translation in Roman script (Latin alphabet). KEEP ALL [bracketed terms] EXACTLY as in input. Non-bracketed words should be in Roman/Hinglish.
-   - "devanagari": Translation in {script} script. KEEP ALL [bracketed terms] EXACTLY as in input. ALL non-bracketed words must be in Devanagari script ONLY - no Roman/Hinglish words allowed!
+Input: "Call the [function] with two [arguments]."
+Output: {{"roman": "function la don arguments saath call kara", "devanagari": "फंक्शन ला दोन आर्ग्युमेंट्स साठ call करा"}}
 
-IMPORTANT: 
-- The brackets [] are delimiters - keep them exactly as they appear in the input!
-- For Devanagari output: EVERY non-bracketed word must be in Devanagari script, not Roman!
-
-EXAMPLES:
-
+STRICT RULES FOR MARATHI:
+- NEVER use "hai" - ALWAYS use "ahe" (singular) or "ahet" (plural)
+- NEVER use "karta hai" - ALWAYS use "karte" (plural) or "karto" (singular)
+- NEVER use "ke" - ALWAYS use "cha/chi/che"
+- NEVER use "par" or "upar" - ALWAYS use "vpar"
+- NEVER use "ko" - ALWAYS use "la"
+- NEVER use "ke saath" - ALWAYS use "saath"
+- NEVER use "do" - ALWAYS use "don"'''
+        else:
+            examples = '''
 Input: "The [for loop] iterates over the [array]."
 Output: {{"roman": "[for loop] [array] ke upar iterate karta hai", "devanagari": "[फॉर लूप] [ऐरे] के ऊपर इटरेट करता है"}}
 
@@ -93,6 +140,38 @@ Output: {{"roman": "[function] ek [boolean] value return karta hai", "devanagari
 
 Input: "Each [object] has its own [instance variables]."
 Output: {{"roman": "har [object] ke apne [instance variables] hote hain", "devanagari": "हर [ऑब्जेक्ट] के अपने [इन्स्टेंस व्हेरिएबल्स] होते हैं"}}
+
+Input: "Call the [function] with two [arguments]."
+Output: {{"roman": "[function] ko do [arguments] ke saath call karo", "devanagari": "[फंक्शन] को दो [आर्ग्युमेंट्स] के साथ कॉल करो"}}'''
+        
+        system_prompt = f"""You are an expert technical translator from English to {lang}.
+
+TASK: Translate the given English text to {lang} while following these rules CRITICAL:
+
+{f"- You MUST translate to {lang} (Marathi), NOT Hindi! This is very important." if self.target_language == 'mr' else ""}
+
+1. ABSOLUTE RULE - PRESERVE BRACKETS: Any text inside square brackets [like this] must appear WITH EXACTLY THE SAME BRACKETS in your output. DO NOT remove, modify, or add any brackets. The bracketed terms are technical terms that must stay in English.
+
+2. TRANSLATE NON-BRACKETED TEXT: Translate only the English text that is NOT inside brackets to {lang}.
+
+3. GRAMMATICAL COGNIZANCE: When translating text that surrounds bracketed terms:
+   - Use proper {lang} sentence structure (typically SOV - Subject-Object-Verb)
+   - Apply correct gender, case, and number agreement
+   - Use appropriate postpositions instead of English prepositions
+   - Add auxiliary verbs and particles as needed for natural {lang} grammar
+{f"   - For MARATHI: Use 'cha/chi/che' for possession, 'ahe/ahet' for 'is/are', 'karte' for 'does', NOT Hindi forms!" if self.target_language == 'mr' else ""}
+
+4. OUTPUT FORMAT: Return a JSON object with exactly these two fields:
+   - "roman": Translation in Roman script (Latin alphabet). KEEP ALL [bracketed terms] EXACTLY as in input. Non-bracketed words should be in Roman {lang.lower()} transliteration.
+   - "devanagari": Translation in {script} script. KEEP ALL [bracketed terms] EXACTLY as in input. ALL non-bracketed words must be in Devanagari script ONLY - no Roman words allowed!
+
+IMPORTANT: 
+- The brackets [] are delimiters - keep them exactly as they appear in the input!
+- For Devanagari output: EVERY non-bracketed word must be in Devanagari script, not Roman!
+- For Marathi: Use proper Marathi grammar and sentence structure (not Hindi)
+
+EXAMPLES:
+''' + examples + '''
 
 Input: "The [while loop] continues until the [condition] becomes false."
 Output: {{"roman": "[while loop] tab tak continue karta hai jab tak [condition] false nahi ho jati", "devanagari": "[वाइल लूप] तब तक जारी रहता है जब तक [कंडीशन] फॉल्स नहीं हो जाती"}}
@@ -154,6 +233,11 @@ Output:"""
                 # Remove brackets from final output
                 roman = self.unguard_terms(roman)
                 devanagari = self.unguard_terms(devanagari)
+                
+                # Post-process Marathi to fix common Hindi->Marathi issues
+                if self.target_language == 'mr':
+                    roman = self._fix_marathi_roman(roman)
+                    devanagari = self._fix_marathi_devanagari(devanagari)
                 
                 return {"roman": roman, "devanagari": devanagari}
             except json.JSONDecodeError:
