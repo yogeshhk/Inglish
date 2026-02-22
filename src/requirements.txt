@@ -3,29 +3,16 @@ numpy>=1.24.0
 pandas>=2.0.0
 pyyaml>=6.0
 
-# NLP and Translation
-transformers>=4.30.0
-torch>=2.0.0
-sentencepiece>=0.1.99
-sacrebleu>=2.3.1
-bert-score>=0.3.13
-
-# Indian Language Support
-indic-transliteration>=2.3.0
-aksharamukha>=1.0.0
+# UI
+streamlit>=1.28.0
 
 # API and LLM Integration
-openai>=1.0.0
-anthropic>=0.18.0
+groq>=0.4.0
 requests>=2.31.0
-
-# Evaluation Metrics
-nltk>=3.8
-rouge-score>=0.1.2
+python-dotenv>=1.0.0
 
 # Utilities
 tqdm>=4.65.0
-python-dotenv>=1.0.0
 jsonlines>=3.1.0
 
 # Testing

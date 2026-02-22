@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Example usage of the Inglish Translation Pipeline.
 """
-
 import sys
+import os
+
+# Fix console encoding on Windows
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 from pathlib import Path
 
-# Add the directory containing this file to sys.path so that pipeline.py
-# and its siblings (term_extractor, translator, etc.) can be imported
-# regardless of the working directory the script is launched from.
 sys.path.insert(0, str(Path(__file__).parent))
 
 from pipeline import InglishtranslationPipeline, TranslationConfig
@@ -20,27 +25,25 @@ def example_simple_translation():
     print("Example 1: Simple Translation")
     print("="*60)
     
-    # Configure pipeline
     config = TranslationConfig(
         domain="programming",
         target_language="hi",
-        translator_type="baseline",
-        output_format="both"
+        llm_model="llama-3.1-8b-instant",
+        llm_api_key=os.environ.get("GROQ_API_KEY"),
     )
     
-    # Create pipeline
     pipeline = InglishtranslationPipeline(config)
     
-    # Translate
     text = "The for loop iterates over the array of integers."
     result = pipeline.translate(text, verbose=True)
     
     print("\n" + "="*60)
     print("OUTPUT")
     print("="*60)
-    print(f"Roman:      {result['hinglish_roman']}")
-    print(f"Devanagari: {result['hinglish_devanagari']}")
-    print(f"Terms:      {result['metadata']['technical_terms']}")
+    print(f"Intermediate (bracketed): {result['intermediate_bracketed']}")
+    print(f"Roman:                   {result['hinglish_roman']}")
+    print(f"Devanagari:              {result['hinglish_devanagari']}")
+    print(f"Terms:                   {result['metadata']['technical_terms']}")
     print("="*60 + "\n")
 
 
@@ -50,24 +53,20 @@ def example_batch_translation():
     print("Example 2: Batch Translation")
     print("="*60)
     
-    # Configure pipeline
     config = TranslationConfig(
         domain="programming",
         target_language="hi",
-        translator_type="baseline",
-        output_format="roman"
+        llm_api_key=os.environ.get("GROQ_API_KEY"),
     )
     
     pipeline = InglishtranslationPipeline(config)
     
-    # Multiple texts
     texts = [
         "This class has four member variables.",
         "The function returns a boolean value.",
         "Each object has its own instance variables.",
     ]
     
-    # Translate all
     results = pipeline.translate_batch(texts, verbose=False)
     
     print("\n" + "="*60)
@@ -75,56 +74,19 @@ def example_batch_translation():
     print("="*60)
     for i, (text, result) in enumerate(zip(texts, results), 1):
         print(f"\n[{i}] English: {text}")
-        print(f"    Roman:   {result['hinglish_roman']}")
-    print("="*60 + "\n")
-
-
-def example_quality_evaluation():
-    """Example with quality evaluation."""
-    print("="*60)
-    print("Example 3: Quality Evaluation")
-    print("="*60)
-    
-    config = TranslationConfig(
-        domain="programming",
-        target_language="hi",
-        translator_type="baseline"
-    )
-    
-    pipeline = InglishtranslationPipeline(config)
-    
-    # Original and reference
-    english = "The while loop continues until the condition becomes false."
-    reference = "while loop tab tak continue karta hai jab tak condition false nahi ho jati"
-    
-    # Translate
-    result = pipeline.translate(english)
-    translated = result['hinglish_roman']
-    
-    # Evaluate
-    metrics = pipeline.evaluate_quality(english, translated, reference)
-    
-    print(f"\nEnglish:    {english}")
-    print(f"Reference:  {reference}")
-    print(f"Predicted:  {translated}")
-    print(f"\nMetrics:")
-    print(f"  Terminology Preservation: {metrics['terminology_preservation']*100:.1f}%")
-    print(f"  Length Ratio:             {metrics['length_ratio']:.2f}")
-    if 'word_overlap' in metrics:
-        print(f"  Word Overlap:             {metrics['word_overlap']*100:.1f}%")
+        print(f"    Bracketed: {result['intermediate_bracketed']}")
+        print(f"    Roman:     {result['hinglish_roman']}")
     print("="*60 + "\n")
 
 
 def example_different_domains():
     """Example with different domains."""
     print("="*60)
-    print("Example 4: Different Domains")
+    print("Example 2: Different Domains")
     print("="*60)
     
     examples = [
         ("programming", "The array stores multiple integer values."),
-        ("physics", "Force equals mass times acceleration."),
-        ("finance", "The ROI indicates investment profitability."),
     ]
     
     for domain, text in examples:
@@ -135,14 +97,15 @@ def example_different_domains():
             config = TranslationConfig(
                 domain=domain,
                 target_language="hi",
-                translator_type="baseline"
+                llm_api_key=os.environ.get("GROQ_API_KEY"),
             )
             
             pipeline = InglishtranslationPipeline(config)
             result = pipeline.translate(text)
             
-            print(f"Roman:   {result['hinglish_roman']}")
-            print(f"Terms:   {result['metadata']['technical_terms']}")
+            print(f"Bracketed: {result['intermediate_bracketed']}")
+            print(f"Roman:     {result['hinglish_roman']}")
+            print(f"Terms:     {result['metadata']['technical_terms']}")
         except FileNotFoundError:
             print(f"(Glossary not available for {domain})")
     
@@ -155,9 +118,13 @@ def main():
     print("INGLISH TRANSLATOR - USAGE EXAMPLES")
     print("="*60 + "\n")
     
+    if not os.environ.get("GROQ_API_KEY"):
+        print("WARNING: GROQ_API_KEY not set in environment.")
+        print("Set it with: export GROQ_API_KEY=your_api_key")
+        print("Examples will not work without a valid API key.\n")
+    
     example_simple_translation()
     example_batch_translation()
-    example_quality_evaluation()
     example_different_domains()
     
     print("="*60)

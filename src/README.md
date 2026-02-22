@@ -1,6 +1,61 @@
-# Getting Started with Inglish Translator
+# Inglish with an 'I' for/on/of India
 
-This guide will help you get up and running with the Inglish Translation framework in 5 minutes.
+Technical English to Inglish Translation System
+
+A comprehensive framework for translating technical English content to Indian languages (Hinglish, Minglish, etc.) while preserving domain-specific terminology in their original form through intelligent code-mixing.
+
+## 🎯 Problem Statement
+
+Pure machine translation of technical content to Indian languages produces incomprehensible text. For example:
+
+```
+English: "This class has 4 member variables."
+❌ Poor Hindi: "इस क्लास में 4 सदस्य चर हैं।"
+✅ Desired Hinglish (Roman): "iis class mein chaar member variables hai"
+✅ Desired Hinglish (Devanagari): "इस क्लास में चार मेंबर व्हेरिएबल्स है।"
+```
+
+This project implements a hybrid translation approach that:
+- **Preserves technical terms** in English (the language professionals actually use)
+- **Translates context** into native language for accessibility
+- **Produces natural code-mixed output** reflecting authentic communication patterns
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐
+│  English Input  │
+└────────┬────────┘
+         │
+    ┌────▼─────────────────┐
+    │  Term Extraction     │
+    │  (Rule-Based + NER)  │
+    └────┬─────────────────┘
+         │
+    ┌────▼──────────────────┐
+    │  Term Guarding        │
+    │  [bracket terms]      │
+    └────┬──────────────────┘
+         │
+    ┌────▼──────────────────┐
+    │  LLM Translation      │
+    │  (with constraints)   │
+    └────┬──────────────────┘
+         │
+    ┌────▼──────────────────┐
+    │  Post-Processing      │
+    │  & Validation         │
+    └────┬──────────────────┘
+         │
+    ┌────▼──────────────────┐
+    │  Script Conversion    │
+    │  (Roman/Devanagari)   │
+    └────┬──────────────────┘
+         │
+    ┌────▼──────────────────┐
+    │  Bilingual Output     │
+    └───────────────────────┘
+```
 
 ## Quick Start
 

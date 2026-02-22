@@ -1,350 +1,238 @@
 # Programming Domain Glossary
-# Technical terms to preserve in English, with phonetic Devanagari rendering.
-# Devanagari values reflect how the term is spoken in natural Hinglish.
+# Plain list of programming terms (unigrams, bigrams, n-grams)
+# These terms will be preserved in English and bracketed during translation
 
 domain: programming
-language_pair: "en_hi"
-version: "1.2"
+version: "2.0"
 
-# ── Single-word terms ────────────────────────────────────────────────────────
+# Single-word terms (unigrams)
 terms:
-  - term: "variable"
-    preserve: true
-    devanagari: "व्हेरिएबल"
-    context: "data storage element"
+  - variable
+  - variables
+  - function
+  - functions
+  - class
+  - classes
+  - object
+  - objects
+  - array
+  - arrays
+  - loop
+  - loops
+  - method
+  - methods
+  - parameter
+  - parameters
+  - argument
+  - arguments
+  - return
+  - string
+  - strings
+  - integer
+  - integers
+  - boolean
+  - list
+  - lists
+  - dictionary
+  - tuple
+  - set
+  - iterator
+  - index
+  - indices
+  - key
+  - keys
+  - value
+  - values
+  - instance
+  - instances
+  - inheritance
+  - polymorphism
+  - encapsulation
+  - condition
+  - conditions
+  - exception
+  - exceptions
+  - module
+  - modules
+  - interface
+  - compiler
+  - pointer
+  - stack
+  - queue
+  - node
+  - nodes
+  - algorithm
+  - debug
+  - error
+  - errors
+  - syntax
+  - runtime
+  - operator
+  - operand
+  - expression
+  - statement
+  - block
+  - scope
+  - global
+  - local
+  - static
+  - constant
+  - memory
+  - reference
+  - element
+  - length
+  - size
+  - capacity
+  - constructor
+  - destructor
+  - property
+  - attribute
+  - event
+  - handler
+  - callback
+  - thread
+  - process
+  - import
+  - export
+  - package
+  - library
+  - framework
+  - API
+  - SDK
+  - server
+  - client
+  - database
+  - query
+  - table
+  - row
+  - column
+  - constraint
+  - schema
+  - migration
+  - token
+  - session
+  - cookie
+  - cache
+  - request
+  - response
+  - header
+  - body
+  - payload
+  - endpoint
+  - route
+  - controller
+  - service
+  - repository
+  - model
+  - view
+  - template
+  - middleware
+  - router
+  - decorator
+  - annotation
 
-  - term: "variables"
-    preserve: true
-    devanagari: "व्हेरिएबल्स"
-    context: "plural of variable"
-
-  - term: "function"
-    preserve: true
-    devanagari: "फंक्शन"
-    context: "reusable code block"
-
-  - term: "functions"
-    preserve: true
-    devanagari: "फंक्शन्स"
-    context: "plural of function"
-
-  - term: "class"
-    preserve: true
-    devanagari: "क्लास"
-    context: "object template"
-
-  - term: "classes"
-    preserve: true
-    devanagari: "क्लासेज़"
-    context: "plural of class"
-
-  - term: "object"
-    preserve: true
-    devanagari: "ऑब्जेक्ट"
-    context: "instance of a class"
-
-  - term: "objects"
-    preserve: true
-    devanagari: "ऑब्जेक्ट्स"
-    context: "plural of object"
-
-  - term: "array"
-    preserve: true
-    devanagari: "ऐरे"
-    context: "sequence container"
-
-  - term: "arrays"
-    preserve: true
-    devanagari: "ऐरेज़"
-    context: "plural of array"
-
-  - term: "loop"
-    preserve: true
-    devanagari: "लूप"
-    context: "iteration construct"
-
-  - term: "method"
-    preserve: true
-    devanagari: "मेथड"
-    context: "function in a class"
-
-  - term: "methods"
-    preserve: true
-    devanagari: "मेथड्स"
-    context: "plural of method"
-
-  - term: "parameter"
-    preserve: true
-    devanagari: "पैरामीटर"
-    context: "function input"
-
-  - term: "parameters"
-    preserve: true
-    devanagari: "पैरामीटर्स"
-    context: "plural of parameter"
-
-  - term: "argument"
-    preserve: true
-    devanagari: "आर्ग्युमेंट"
-    context: "function input value"
-
-  - term: "arguments"
-    preserve: true
-    devanagari: "आर्ग्युमेंट्स"
-    context: "plural of argument"
-
-  - term: "return"
-    preserve: true
-    devanagari: "रिटर्न"
-    context: "function output"
-
-  - term: "string"
-    preserve: true
-    devanagari: "स्ट्रिंग"
-    context: "text data type"
-
-  - term: "strings"
-    preserve: true
-    devanagari: "स्ट्रिंग्स"
-    context: "plural of string"
-
-  - term: "integer"
-    preserve: true
-    devanagari: "इंटीजर"
-    context: "whole number type"
-
-  - term: "integers"
-    preserve: true
-    devanagari: "इंटीजर्स"
-    context: "plural of integer"
-
-  - term: "boolean"
-    preserve: true
-    devanagari: "बूलियन"
-    context: "true/false type"
-
-  - term: "list"
-    preserve: true
-    devanagari: "लिस्ट"
-    context: "collection type"
-
-  - term: "lists"
-    preserve: true
-    devanagari: "लिस्ट्स"
-    context: "plural of list"
-
-  - term: "dictionary"
-    preserve: true
-    devanagari: "डिक्शनरी"
-    context: "key-value store"
-
-  - term: "tuple"
-    preserve: true
-    devanagari: "ट्यूपल"
-    context: "immutable sequence"
-
-  - term: "set"
-    preserve: true
-    devanagari: "सेट"
-    context: "unique collection"
-
-  - term: "iterator"
-    preserve: true
-    devanagari: "इटरेटर"
-    context: "iteration object"
-
-  - term: "index"
-    preserve: true
-    devanagari: "इंडेक्स"
-    context: "position in sequence"
-
-  - term: "key"
-    preserve: true
-    devanagari: "की"
-    context: "dictionary key"
-
-  - term: "value"
-    preserve: true
-    devanagari: "व्हॅल्यू"
-    context: "data value"
-
-  - term: "values"
-    preserve: true
-    devanagari: "व्हॅल्यूज़"
-    context: "plural of value"
-
-  - term: "instance"
-    preserve: true
-    devanagari: "इन्स्टेंस"
-    context: "object instance"
-
-  - term: "inheritance"
-    preserve: true
-    devanagari: "इनहेरिटेंस"
-    context: "OOP concept"
-
-  - term: "polymorphism"
-    preserve: true
-    devanagari: "पॉलिमॉर्फिज्म"
-    context: "OOP concept"
-
-  - term: "encapsulation"
-    preserve: true
-    devanagari: "एन्कैप्सुलेशन"
-    context: "OOP concept"
-
-  - term: "condition"
-    preserve: true
-    devanagari: "कंडीशन"
-    context: "boolean expression"
-
-  - term: "exception"
-    preserve: true
-    devanagari: "एक्सेप्शन"
-    context: "error handling"
-
-  - term: "exceptions"
-    preserve: true
-    devanagari: "एक्सेप्शन्स"
-    context: "plural of exception"
-
-  - term: "module"
-    preserve: true
-    devanagari: "मॉड्यूल"
-    context: "code unit"
-
-  - term: "interface"
-    preserve: true
-    devanagari: "इंटरफेस"
-    context: "contract definition"
-
-  - term: "compiler"
-    preserve: true
-    devanagari: "कम्पाइलर"
-    context: "code compiler"
-
-  - term: "pointer"
-    preserve: true
-    devanagari: "पॉइंटर"
-    context: "memory address"
-
-  - term: "stack"
-    preserve: true
-    devanagari: "स्टैक"
-    context: "LIFO data structure"
-
-  - term: "queue"
-    preserve: true
-    devanagari: "क्यू"
-    context: "FIFO data structure"
-
-  - term: "node"
-    preserve: true
-    devanagari: "नोड"
-    context: "graph/tree element"
-
-  - term: "nodes"
-    preserve: true
-    devanagari: "नोड्स"
-    context: "plural of node"
-
-  - term: "algorithm"
-    preserve: true
-    devanagari: "अल्गोरिद्म"
-    context: "step-by-step procedure"
-
-  - term: "debug"
-    preserve: true
-    devanagari: "डीबग"
-    context: "find and fix errors"
-
-  - term: "error"
-    preserve: true
-    devanagari: "एरर"
-    context: "program error"
-
-  - term: "errors"
-    preserve: true
-    devanagari: "एरर्स"
-    context: "plural of error"
-
-# ── Compound terms ────────────────────────────────────────────────────────────
-# Matched as complete phrases (longest-match, highest priority over single terms).
+# Compound terms (bigrams, trigrams, n-grams)
 compound_terms:
-  - term: "for loop"
-    devanagari: "फॉर लूप"
-
-  - term: "while loop"
-    devanagari: "वाइल लूप"
-
-  - term: "if statement"
-    devanagari: "इफ स्टेटमेंट"
-
-  - term: "else statement"
-    devanagari: "एल्स स्टेटमेंट"
-
-  - term: "elif statement"
-    devanagari: "एलिफ स्टेटमेंट"
-
-  - term: "member variables"
-    devanagari: "मेंबर व्हेरिएबल्स"
-
-  - term: "member variable"
-    devanagari: "मेंबर व्हेरिएबल"
-
-  - term: "class variables"
-    devanagari: "क्लास व्हेरिएबल्स"
-
-  - term: "class variable"
-    devanagari: "क्लास व्हेरिएबल"
-
-  - term: "instance variables"
-    devanagari: "इन्स्टेंस व्हेरिएबल्स"
-
-  - term: "instance variable"
-    devanagari: "इन्स्टेंस व्हेरिएबल"
-
-  - term: "local variables"
-    devanagari: "लोकल व्हेरिएबल्स"
-
-  - term: "local variable"
-    devanagari: "लोकल व्हेरिएबल"
-
-  - term: "global variables"
-    devanagari: "ग्लोबल व्हेरिएबल्स"
-
-  - term: "global variable"
-    devanagari: "ग्लोबल व्हेरिएबल"
-
-  - term: "data type"
-    devanagari: "डेटा टाइप"
-
-  - term: "return type"
-    devanagari: "रिटर्न टाइप"
-
-  - term: "function call"
-    devanagari: "फंक्शन कॉल"
-
-  - term: "method call"
-    devanagari: "मेथड कॉल"
-
-  - term: "object oriented"
-    devanagari: "ऑब्जेक्ट ओरिएंटेड"
-
-  - term: "object-oriented programming"
-    devanagari: "ऑब्जेक्ट ओरिएंटेड प्रोग्रामिंग"
-
-  - term: "source code"
-    devanagari: "सोर्स कोड"
-
-  - term: "syntax error"
-    devanagari: "सिंटेक्स एरर"
-
-  - term: "runtime error"
-    devanagari: "रनटाइम एरर"
-
-  - term: "compile time"
-    devanagari: "कम्पाइल टाइम"
-
-  - term: "run time"
-    devanagari: "रन टाइम"
+  - for loop
+  - while loop
+  - do while loop
+  - if statement
+  - else statement
+  - elif statement
+  - switch statement
+  - case statement
+  - try catch
+  - try except
+  - finally block
+  - throw exception
+  - raise exception
+  - member variables
+  - member variable
+  - class variables
+  - class variable
+  - instance variables
+  - instance variable
+  - local variables
+  - local variable
+  - global variables
+  - global variable
+  - static variables
+  - static variable
+  - constant variables
+  - constant variable
+  - data type
+  - return type
+  - parameter type
+  - function call
+  - method call
+  - function definition
+  - method definition
+  - class definition
+  - object oriented
+  - object-oriented programming
+  - source code
+  - syntax error
+  - runtime error
+  - compile time
+  - run time
+  - null pointer
+  - memory leak
+  - infinite loop
+  - nested loop
+  - callback function
+  - anonymous function
+  - arrow function
+  - lambda function
+  - higher order function
+  - pure function
+  - recursive function
+  - variable scope
+  - global scope
+  - local scope
+  - block scope
+  - function scope
+  - inheritance hierarchy
+  - method overriding
+  - method overloading
+  - access modifier
+  - public method
+  - private method
+  - protected method
+  - abstract class
+  - interface class
+  - abstract method
+  - virtual method
+  - static method
+  - instance method
+  - getter setter
+  - event handler
+  - error handling
+  - exception handling
+  - try catch block
+  - database connection
+  - sql query
+  - rest api
+  - http request
+  - http response
+  - json data
+  - xml data
+  - api endpoint
+  - web service
+  - client server
+  - front end
+  - back end
+  - full stack
+  - unit test
+  - integration test
+  - test case
+  - test suite
+  - mock object
+  - test driven development
+  - continuous integration
+  - version control
+  - code review
+  - design pattern
+  - singleton pattern
+  - factory pattern
+  - observer pattern
+  - mvc pattern

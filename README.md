@@ -164,7 +164,6 @@ inglish-translator/
 │
 └── docs/
     ├── ARCHITECTURE.md
-    ├── API_REFERENCE.md
     ├── CONTRIBUTING.md
     └── research_framework.md    # Full research documentation
 ```

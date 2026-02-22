@@ -1,16 +1,15 @@
 """
 Streamlit UI for the English to Inglish Translation System.
-Run with: streamlit run app.py
+Run with: streamlit run streamlit_main.py
 """
 
+import os
 import sys
 import streamlit as st
 from pathlib import Path
 
-# Add src directory to path so pipeline modules are importable
 sys.path.insert(0, str(Path(__file__).parent))
 
-# ── Page config ────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="English → Inglish",
     page_icon="🔤",
@@ -18,23 +17,19 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Custom CSS ─────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── Global reset ── */
 html, body, [class*="css"] {
     font-family: 'Sora', sans-serif;
 }
 
-/* ── Background ── */
 .stApp {
     background: #0d1117;
     color: #e6edf3;
 }
 
-/* ── Sidebar ── */
 section[data-testid="stSidebar"] {
     background: #161b22;
     border-right: 1px solid #21262d;
@@ -59,7 +54,6 @@ section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
     font-weight: 400;
 }
 
-/* Sidebar selectbox */
 section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     background: #0d1117;
     border: 1px solid #30363d;
@@ -67,7 +61,6 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     color: #c9d1d9;
 }
 
-/* ── Main title ── */
 .main-title {
     font-family: 'Sora', sans-serif;
     font-size: 2.1rem;
@@ -88,7 +81,6 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     letter-spacing: 0.02em;
 }
 
-/* ── Section labels ── */
 .section-label {
     font-size: 0.75rem;
     font-weight: 600;
@@ -98,7 +90,6 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     margin-bottom: 0.4rem;
 }
 
-/* ── Text areas ── */
 .stTextArea textarea {
     background: #161b22 !important;
     border: 1px solid #30363d !important;
@@ -116,7 +107,6 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.12) !important;
 }
 
-/* Output box */
 .output-box {
     background: #161b22;
     border: 1px solid #30363d;
@@ -126,16 +116,12 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     font-size: 0.88rem;
     line-height: 1.7;
     color: #c9d1d9;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 80px;
+    max-height: 150px;
     overflow-y: auto;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    pointer-events: none;
     white-space: pre-wrap;
     word-break: break-word;
+    margin-bottom: 0.5rem;
 }
 
 .output-box.has-content {
@@ -149,7 +135,6 @@ section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
     font-size: 0.88rem;
 }
 
-/* ── Buttons ── */
 div[data-testid="column"] .stButton button {
     width: 100%;
     border-radius: 8px;
@@ -163,7 +148,6 @@ div[data-testid="column"] .stButton button {
     border: none;
 }
 
-/* Translate button */
 div[data-testid="column"]:first-child .stButton button {
     background: linear-gradient(135deg, #1f6feb, #388bfd);
     color: #ffffff;
@@ -175,7 +159,6 @@ div[data-testid="column"]:first-child .stButton button:hover {
     box-shadow: 0 4px 16px rgba(56, 139, 253, 0.35);
 }
 
-/* Clear button */
 div[data-testid="column"]:last-child .stButton button {
     background: #21262d;
     color: #8b949e;
@@ -188,7 +171,6 @@ div[data-testid="column"]:last-child .stButton button:hover {
     transform: translateY(-1px);
 }
 
-/* ── Terms pill ── */
 .terms-container {
     margin-top: 0.6rem;
     display: flex;
@@ -217,14 +199,12 @@ div[data-testid="column"]:last-child .stButton button:hover {
     border-radius: 20px;
 }
 
-/* ── Divider ── */
 hr {
     border: none;
     border-top: 1px solid #21262d;
     margin: 1.5rem 0;
 }
 
-/* ── Sidebar logo area ── */
 .sidebar-logo {
     font-size: 1.4rem;
     font-weight: 700;
@@ -238,7 +218,6 @@ hr {
     margin-bottom: 1.5rem;
 }
 
-/* ── Status badge ── */
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -259,40 +238,41 @@ hr {
     border: 1px solid #da3633;
     color: #ff7b72;
 }
+.status-badge.info {
+    background: rgba(88, 166, 255, 0.15);
+    border: 1px solid #58a6ff;
+    color: #58a6ff;
+}
 </style>
 """, unsafe_allow_html=True)
 
 
-# ── Language / script maps ─────────────────────────────────────────────────────
 LANGUAGE_MAP = {
-    "Hindi":   "hi",
+    "Hindi": "hi",
     "Marathi": "mr",
-}
-
-SCRIPT_MAP = {
-    "Devanagari": "hinglish_devanagari",
-    "Roman":      "hinglish_roman",
 }
 
 DOMAIN_ICONS = {
     "programming": "💻",
-    "physics":     "⚛️",
-    "finance":     "📈",
+    "physics": "⚛️",
+    "finance": "📈",
 }
 
 
-# ── Session state defaults ─────────────────────────────────────────────────────
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
-if "output_text" not in st.session_state:
-    st.session_state.output_text = ""
+if "output_roman" not in st.session_state:
+    st.session_state.output_roman = ""
+if "output_devanagari" not in st.session_state:
+    st.session_state.output_devanagari = ""
+if "intermediate" not in st.session_state:
+    st.session_state.intermediate = ""
 if "tech_terms" not in st.session_state:
     st.session_state.tech_terms = []
 if "last_error" not in st.session_state:
     st.session_state.last_error = ""
 
 
-# ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">🔤 Inglish</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-tagline">Code-mixed translation engine</div>', unsafe_allow_html=True)
@@ -317,10 +297,15 @@ with st.sidebar:
     )
 
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown('<p class="section-label">Output Script</p>', unsafe_allow_html=True)
-    output_script_label = st.radio(
-        label="Output Script",
-        options=["Devanagari", "Roman"],
+    st.markdown('<p class="section-label">LLM Model</p>', unsafe_allow_html=True)
+    llm_model = st.selectbox(
+        label="Model",
+        options=[
+            "llama-3.1-8b-instant",
+            "llama-3.1-70b-instant",
+            "mixtral-8x7b-32768",
+            "llama-3-70b-8192",
+        ],
         index=0,
         label_visibility="collapsed",
     )
@@ -331,19 +316,16 @@ with st.sidebar:
         <div style="font-size:0.72rem; color:#484f58; line-height:1.7;">
         <b style="color:#8b949e;">Domain</b><br>{domain.capitalize()}<br><br>
         <b style="color:#8b949e;">Language</b><br>{target_language_label}<br><br>
-        <b style="color:#8b949e;">Script</b><br>{output_script_label}
+        <b style="color:#8b949e;">Model</b><br>{llm_model}
         </div>
         """,
         unsafe_allow_html=True,
     )
 
 
-# ── Derive config values ───────────────────────────────────────────────────────
 target_language = LANGUAGE_MAP[target_language_label]
-output_key      = SCRIPT_MAP[output_script_label]
 
 
-# ── Main panel ────────────────────────────────────────────────────────────────
 st.markdown('<h1 class="main-title">English → Inglish Translation</h1>', unsafe_allow_html=True)
 st.markdown(
     '<p class="main-subtitle">Translate technical English into code-mixed Hindi/Marathi '
@@ -351,18 +333,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Input area
 st.markdown('<p class="section-label">Input Text</p>', unsafe_allow_html=True)
 input_text = st.text_area(
     label="Input",
     value=st.session_state.input_text,
     placeholder="Type or paste English text here…\n\nExample: The for loop iterates over the array of integers.",
-    height=200,
+    height=150,
     label_visibility="collapsed",
     key="input_area",
 )
 
-# Buttons
 col_translate, col_clear, col_spacer = st.columns([1, 1, 4])
 
 with col_translate:
@@ -371,20 +351,22 @@ with col_translate:
 with col_clear:
     clear_clicked = st.button("✕  Clear", use_container_width=True)
 
-# Handle Clear
 if clear_clicked:
-    st.session_state.input_text  = ""
-    st.session_state.output_text = ""
-    st.session_state.tech_terms  = []
-    st.session_state.last_error  = ""
+    st.session_state.input_text = ""
+    st.session_state.output_roman = ""
+    st.session_state.output_devanagari = ""
+    st.session_state.intermediate = ""
+    st.session_state.tech_terms = []
+    st.session_state.last_error = ""
     st.rerun()
 
-# Handle Translate
 if translate_clicked:
     text = input_text.strip()
-    st.session_state.last_error  = ""
-    st.session_state.output_text = ""
-    st.session_state.tech_terms  = []
+    st.session_state.last_error = ""
+    st.session_state.output_roman = ""
+    st.session_state.output_devanagari = ""
+    st.session_state.intermediate = ""
+    st.session_state.tech_terms = []
 
     if not text:
         st.session_state.last_error = "Please enter some text before translating."
@@ -395,23 +377,22 @@ if translate_clicked:
             config = TranslationConfig(
                 domain=domain,
                 target_language=target_language,
-                translator_type="baseline",
-                output_format="both",
+                llm_model=llm_model,
             )
             pipeline = InglishtranslationPipeline(config)
-            result   = pipeline.translate(text, verbose=False)
+            result = pipeline.translate(text, verbose=False)
 
-            st.session_state.output_text = result.get(output_key, "")
-            st.session_state.tech_terms  = result.get("metadata", {}).get("technical_terms", [])
+            st.session_state.intermediate = result.get("intermediate_bracketed", "")
+            st.session_state.output_roman = result.get("hinglish_roman", "")
+            st.session_state.output_devanagari = result.get("hinglish_devanagari", "")
+            st.session_state.tech_terms = result.get("metadata", {}).get("technical_terms", [])
 
         except FileNotFoundError as e:
             st.session_state.last_error = f"Glossary file not found: {e}"
         except Exception as e:
             st.session_state.last_error = f"Translation error: {e}"
 
-# ── Output area ────────────────────────────────────────────────────────────────
 st.markdown("<br>", unsafe_allow_html=True)
-st.markdown('<p class="section-label">Output — ' + output_script_label + '</p>', unsafe_allow_html=True)
 
 if st.session_state.last_error:
     st.markdown(
@@ -419,17 +400,34 @@ if st.session_state.last_error:
         unsafe_allow_html=True,
     )
 
-if st.session_state.output_text:
+if st.session_state.intermediate:
     st.markdown(
-        f'<div class="status-badge success">✓ Translation complete</div>',
+        '<div class="status-badge info">✓ Translation complete</div>',
         unsafe_allow_html=True,
     )
+    
+    st.markdown('<p class="section-label">Intermediate (Terms Bracketed)</p>', unsafe_allow_html=True)
     st.markdown(
-        f'<div class="output-box has-content">{st.session_state.output_text}</div>',
+        f'<div class="output-box">{st.session_state.intermediate}</div>',
         unsafe_allow_html=True,
     )
 
-    # Technical terms pills
+    col_roman, col_deva = st.columns(2)
+    
+    with col_roman:
+        st.markdown('<p class="section-label">Roman Script</p>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="output-box has-content">{st.session_state.output_roman}</div>',
+            unsafe_allow_html=True,
+        )
+    
+    with col_deva:
+        st.markdown('<p class="section-label">Devanagari Script</p>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="output-box has-content">{st.session_state.output_devanagari}</div>',
+            unsafe_allow_html=True,
+        )
+
     if st.session_state.tech_terms:
         pills_html = '<div class="terms-container"><span class="terms-label">Preserved terms</span>'
         for term in st.session_state.tech_terms:
@@ -437,9 +435,30 @@ if st.session_state.output_text:
         pills_html += '</div>'
         st.markdown(pills_html, unsafe_allow_html=True)
 else:
+    st.markdown('<p class="section-label">Intermediate (Terms Bracketed)</p>', unsafe_allow_html=True)
     st.markdown(
         '<div class="output-box"><span class="output-placeholder">'
-        'Translation will appear here…'
+        'Bracketed terms will appear here...'
         '</span></div>',
         unsafe_allow_html=True,
     )
+    
+    col_roman, col_deva = st.columns(2)
+    
+    with col_roman:
+        st.markdown('<p class="section-label">Roman Script</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="output-box"><span class="output-placeholder">'
+            'Roman translation will appear here...'
+            '</span></div>',
+            unsafe_allow_html=True,
+        )
+    
+    with col_deva:
+        st.markdown('<p class="section-label">Devanagari Script</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<div class="output-box"><span class="output-placeholder">'
+            'Devanagari translation will appear here...'
+            '</span></div>',
+            unsafe_allow_html=True,
+        )
