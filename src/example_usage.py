@@ -2,134 +2,186 @@
 # -*- coding: utf-8 -*-
 """
 Example usage of the Inglish Translation Pipeline.
+
+Auto-detects which LLM provider to use from your environment variables.
+Set one of: GROQ_API_KEY, GEMINI_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY
 """
-import sys
 import os
+import sys
+from pathlib import Path
 
 # Fix console encoding on Windows
-if sys.platform == 'win32':
+if sys.platform == "win32":
     import codecs
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
-
-from pathlib import Path
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
+    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
 from pipeline import InglishtranslationPipeline, TranslationConfig
 
 
-def example_simple_translation():
-    """Simple translation example."""
-    print("="*60)
-    print("Example 1: Simple Translation")
-    print("="*60)
-    
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _separator(title: str = "") -> None:
+    line = "=" * 60
+    print(f"\n{line}")
+    if title:
+        print(title)
+        print(line)
+
+
+def _detect_provider() -> tuple:
+    """Return (provider, model) based on whichever API key is set."""
+    candidates = [
+        ("groq",      "llama-3.1-8b-instant",    "GROQ_API_KEY"),
+        ("gemini",    "gemini-2.0-flash",         "GEMINI_API_KEY"),
+        ("gemini",    "gemini-2.0-flash",         "GOOGLE_API_KEY"),
+        ("openai",    "gpt-4o-mini",              "OPENAI_API_KEY"),
+        ("anthropic", "claude-3-5-haiku-20241022","ANTHROPIC_API_KEY"),
+    ]
+    for provider, model, env_var in candidates:
+        if os.environ.get(env_var):
+            return provider, model
+    return "groq", "llama-3.1-8b-instant"   # fallback — will raise a clear error
+
+
+# ---------------------------------------------------------------------------
+# Examples
+# ---------------------------------------------------------------------------
+
+def example_simple_translation() -> None:
+    """Single sentence with verbose pipeline trace."""
+    _separator("Example 1: Simple Translation")
+
+    provider, model = _detect_provider()
+    print(f"Provider: {provider}   Model: {model}\n")
+
+    # ----------------------------------------------------------------
+    # To use a specific provider, replace the two lines above with one
+    # of these and set the matching environment variable:
+    #
+    #   Groq   (free):  provider, model = "groq",      "llama-3.1-8b-instant"
+    #                   set GROQ_API_KEY=gsk_...
+    #
+    #   Gemini (free):  provider, model = "gemini",    "gemini-2.0-flash"
+    #                   set GEMINI_API_KEY=AIza...
+    #
+    #   OpenAI:         provider, model = "openai",    "gpt-4o-mini"
+    #                   set OPENAI_API_KEY=sk-...
+    # ----------------------------------------------------------------
+
     config = TranslationConfig(
         domain="programming",
         target_language="hi",
-        llm_model="llama-3.1-8b-instant",
-        llm_api_key=os.environ.get("GROQ_API_KEY"),
+        llm_provider=provider,
+        llm_model=model,
     )
-    
     pipeline = InglishtranslationPipeline(config)
-    
+
     text = "The for loop iterates over the array of integers."
-    result = pipeline.translate(text, verbose=True)
-    
-    print("\n" + "="*60)
-    print("OUTPUT")
-    print("="*60)
+    try:
+        result = pipeline.translate(text, verbose=True)
+    except Exception as e:
+        print(f"\n Translation failed: {e}")
+        print("   Check that the correct API key environment variable is set.")
+        return
+
+    _separator("OUTPUT")
     print(f"Intermediate (bracketed): {result['intermediate_bracketed']}")
-    print(f"Roman:                   {result['hinglish_roman']}")
-    print(f"Devanagari:              {result['hinglish_devanagari']}")
-    print(f"Terms:                   {result['metadata']['technical_terms']}")
-    print("="*60 + "\n")
+    print(f"Roman:                    {result['hinglish_roman']}")
+    print(f"Devanagari:               {result['hinglish_devanagari']}")
+    print(f"Terms preserved:          {result['metadata']['technical_terms']}")
+    print("=" * 60)
 
 
-def example_batch_translation():
-    """Batch translation example."""
-    print("="*60)
-    print("Example 2: Batch Translation")
-    print("="*60)
-    
+def example_batch_translation() -> None:
+    """Translate multiple sentences at once."""
+    _separator("Example 2: Batch Translation")
+
+    provider, model = _detect_provider()
     config = TranslationConfig(
         domain="programming",
         target_language="hi",
-        llm_api_key=os.environ.get("GROQ_API_KEY"),
+        llm_provider=provider,
+        llm_model=model,
     )
-    
     pipeline = InglishtranslationPipeline(config)
-    
+
     texts = [
         "This class has four member variables.",
         "The function returns a boolean value.",
         "Each object has its own instance variables.",
     ]
-    
-    results = pipeline.translate_batch(texts, verbose=False)
-    
-    print("\n" + "="*60)
-    print("BATCH OUTPUT")
-    print("="*60)
+
+    try:
+        results = pipeline.translate_batch(texts, verbose=False)
+    except Exception as e:
+        print(f"\n Batch translation failed: {e}")
+        return
+
+    _separator("BATCH OUTPUT")
     for i, (text, result) in enumerate(zip(texts, results), 1):
-        print(f"\n[{i}] English: {text}")
-        print(f"    Bracketed: {result['intermediate_bracketed']}")
-        print(f"    Roman:     {result['hinglish_roman']}")
-    print("="*60 + "\n")
+        print(f"\n[{i}] English:   {text}")
+        print(f"     Bracketed: {result['intermediate_bracketed']}")
+        print(f"     Roman:     {result['hinglish_roman']}")
+    print("=" * 60)
 
 
-def example_different_domains():
-    """Example with different domains."""
-    print("="*60)
-    print("Example 2: Different Domains")
-    print("="*60)
-    
-    examples = [
-        ("programming", "The array stores multiple integer values."),
+def example_provider_comparison() -> None:
+    """Show available providers and which keys are set."""
+    _separator("Example 3: Provider Overview")
+
+    rows = [
+        ("gemini",    "gemini-2.0-flash",          "GEMINI_API_KEY"),
+        ("groq",      "llama-3.1-8b-instant",      "GROQ_API_KEY"),
+        ("openai",    "gpt-4o-mini",               "OPENAI_API_KEY"),
+        ("anthropic", "claude-3-5-haiku-20241022", "ANTHROPIC_API_KEY"),
+        ("ollama",    "llama3.1",                  "(none)"),
     ]
-    
-    for domain, text in examples:
-        print(f"\nDomain: {domain.upper()}")
-        print(f"English: {text}")
-        
-        try:
-            config = TranslationConfig(
-                domain=domain,
-                target_language="hi",
-                llm_api_key=os.environ.get("GROQ_API_KEY"),
-            )
-            
-            pipeline = InglishtranslationPipeline(config)
-            result = pipeline.translate(text)
-            
-            print(f"Bracketed: {result['intermediate_bracketed']}")
-            print(f"Roman:     {result['hinglish_roman']}")
-            print(f"Terms:     {result['metadata']['technical_terms']}")
-        except FileNotFoundError:
-            print(f"(Glossary not available for {domain})")
-    
-    print("\n" + "="*60 + "\n")
+
+    print("\nAvailable LLM providers:\n")
+    for provider, model, env_var in rows:
+        key_set = "set" if os.environ.get(env_var) else "not set"
+        print(f"  {provider:12s}  {model:38s}  {env_var}  [{key_set}]")
+
+    print("\nTo switch provider, change TranslationConfig:")
+    print("  config = TranslationConfig(llm_provider='groq', llm_model='llama-3.1-8b-instant')")
+    print("=" * 60)
 
 
-def main():
-    """Run all examples."""
-    print("\n" + "="*60)
-    print("INGLISH TRANSLATOR - USAGE EXAMPLES")
-    print("="*60 + "\n")
-    
-    if not os.environ.get("GROQ_API_KEY"):
-        print("WARNING: GROQ_API_KEY not set in environment.")
-        print("Set it with: export GROQ_API_KEY=your_api_key")
-        print("Examples will not work without a valid API key.\n")
-    
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    _separator("INGLISH TRANSLATOR -- USAGE EXAMPLES")
+
+    provider, model = _detect_provider()
+    key_found = any(
+        os.environ.get(k)
+        for k in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "GROQ_API_KEY",
+                  "OPENAI_API_KEY", "ANTHROPIC_API_KEY")
+    )
+
+    if not key_found:
+        print("\n  No LLM API key found in environment.")
+        print("   Set one of these before running:\n")
+        print("     set GROQ_API_KEY=your_key        (free, fast -- recommended)")
+        print("     set GEMINI_API_KEY=your_key      (Google Gemini)")
+        print("     set OPENAI_API_KEY=your_key")
+        print("     set ANTHROPIC_API_KEY=your_key\n")
+        print("   Get a free Groq key at: https://console.groq.com\n")
+    else:
+        print(f"\n  Using provider: {provider}  (model: {model})\n")
+
     example_simple_translation()
     example_batch_translation()
-    example_different_domains()
-    
-    print("="*60)
-    print("All examples completed!")
-    print("="*60 + "\n")
+    example_provider_comparison()
+
+    print("\nAll examples complete.\n")
 
 
 if __name__ == "__main__":

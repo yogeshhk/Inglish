@@ -1,12 +1,20 @@
 # Programming Domain Glossary
-# Plain list of programming terms (unigrams, bigrams, n-grams)
-# These terms will be preserved in English and bracketed during translation
+# Terms listed here are bracketed before LLM translation so they are
+# preserved as English technical terms in the output.
+#
+# WHAT TO PUT HERE: Nouns, concepts, data structures, proper technical names
+#   — things whose English form professionals actually use when speaking.
+#
+# WHAT NOT TO PUT HERE: Verbs (iterate, compile, assign, return...)
+#   — the LLM translates these naturally with correct conjugation and
+#   produces proper Devanagari (इटरेट करता है, कंपाइल करता है, etc.)
 
 domain: programming
-version: "2.0"
+version: "2.2"
 
-# Single-word terms (unigrams)
+# Single-word terms (unigrams) — nouns and concepts only
 terms:
+  # Core OOP
   - variable
   - variables
   - function
@@ -15,60 +23,59 @@ terms:
   - classes
   - object
   - objects
-  - array
-  - arrays
-  - loop
-  - loops
   - method
   - methods
-  - parameter
-  - parameters
-  - argument
-  - arguments
-  - return
-  - string
-  - strings
-  - integer
-  - integers
-  - boolean
-  - list
-  - lists
-  - dictionary
-  - tuple
-  - set
-  - iterator
-  - index
-  - indices
-  - key
-  - keys
-  - value
-  - values
   - instance
   - instances
   - inheritance
   - polymorphism
   - encapsulation
-  - condition
-  - conditions
-  - exception
-  - exceptions
-  - module
-  - modules
-  - interface
-  - compiler
-  - pointer
+  - constructor
+  - destructor
+  - property
+  - attribute
+
+  # Data structures
+  - array
+  - arrays
+  - list
+  - lists
+  - dictionary
+  - tuple
+  - set
   - stack
   - queue
   - node
   - nodes
-  - algorithm
-  - debug
-  - error
-  - errors
-  - syntax
-  - runtime
+  - iterator
+  - index
+  - indices
+  - element
+  - length
+  - size
+  - capacity
+  - key
+  - keys
+  - value
+  - values
+
+  # Types & primitives
+  - string
+  - strings
+  - integer
+  - integers
+  - boolean
+  - pointer
+  - reference
+  - constant
   - operator
   - operand
+
+  # Control flow (nouns/names only — not verbs)
+  - loop
+  - loops
+  - condition
+  - conditions
   - expression
   - statement
   - block
@@ -76,29 +83,32 @@ terms:
   - global
   - local
   - static
-  - constant
+  - exception
+  - exceptions
+
+  # Language / tooling
+  - syntax
+  - runtime
   - memory
-  - reference
-  - element
-  - length
-  - size
-  - capacity
-  - constructor
-  - destructor
-  - property
-  - attribute
-  - event
-  - handler
-  - callback
-  - thread
-  - process
-  - import
-  - export
+  - algorithm
+  - error
+  - errors
+  - compiler
   - package
+  - module
+  - modules
   - library
   - framework
   - API
   - SDK
+  - callback
+  - thread
+  - event
+  - handler
+  - decorator
+  - annotation
+
+  # Web / backend
   - server
   - client
   - database
@@ -128,11 +138,10 @@ terms:
   - template
   - middleware
   - router
-  - decorator
-  - annotation
 
-# Compound terms (bigrams, trigrams, n-grams)
+# Compound terms (bigrams, trigrams) — noun phrases only
 compound_terms:
+  # Loops & control flow
   - for loop
   - while loop
   - do while loop
@@ -141,56 +150,46 @@ compound_terms:
   - elif statement
   - switch statement
   - case statement
+
+  # Exception handling
   - try catch
   - try except
   - finally block
-  - throw exception
-  - raise exception
-  - member variables
+  - try catch block
+  - error handling
+  - exception handling
+
+  # Variable kinds
   - member variable
-  - class variables
+  - member variables
   - class variable
-  - instance variables
+  - class variables
   - instance variable
-  - local variables
+  - instance variables
   - local variable
-  - global variables
+  - local variables
   - global variable
-  - static variables
+  - global variables
   - static variable
-  - constant variables
+  - static variables
   - constant variable
+  - constant variables
+
+  # Types & signatures
   - data type
   - return type
   - parameter type
+
+  # Calls & definitions
   - function call
   - method call
   - function definition
   - method definition
   - class definition
+
+  # OOP concepts
   - object oriented
   - object-oriented programming
-  - source code
-  - syntax error
-  - runtime error
-  - compile time
-  - run time
-  - null pointer
-  - memory leak
-  - infinite loop
-  - nested loop
-  - callback function
-  - anonymous function
-  - arrow function
-  - lambda function
-  - higher order function
-  - pure function
-  - recursive function
-  - variable scope
-  - global scope
-  - local scope
-  - block scope
-  - function scope
   - inheritance hierarchy
   - method overriding
   - method overloading
@@ -205,10 +204,38 @@ compound_terms:
   - static method
   - instance method
   - getter setter
+
+  # Function types
+  - callback function
+  - anonymous function
+  - arrow function
+  - lambda function
+  - higher order function
+  - pure function
+  - recursive function
+
+  # Scope
+  - variable scope
+  - global scope
+  - local scope
+  - block scope
+  - function scope
+
+  # Errors & edge cases
+  - syntax error
+  - runtime error
+  - null pointer
+  - memory leak
+  - infinite loop
+  - nested loop
+  - compile time
+  - run time
+  - source code
+
+  # Events
   - event handler
-  - error handling
-  - exception handling
-  - try catch block
+
+  # Web / API
   - database connection
   - sql query
   - rest api
@@ -222,15 +249,21 @@ compound_terms:
   - front end
   - back end
   - full stack
+
+  # Testing
   - unit test
   - integration test
   - test case
   - test suite
   - mock object
   - test driven development
+
+  # Dev practices
   - continuous integration
   - version control
   - code review
+
+  # Design patterns
   - design pattern
   - singleton pattern
   - factory pattern
