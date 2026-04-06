@@ -13,6 +13,7 @@ from typing import Dict, Optional
 from abc import ABC, abstractmethod
 
 from llm_adapter import LLMAdapter
+from utils import remove_brackets, extract_bracketed_terms
 
 logger = logging.getLogger(__name__)
 
@@ -37,12 +38,12 @@ class BaseTranslator(ABC):
 
     def validate_constraints(self, original: str, translated: str) -> bool:
         """Check that every [bracketed term] in original appears in translated."""
-        return sorted(re.findall(r'\[([^\]]+)\]', original)) == \
-               sorted(re.findall(r'\[([^\]]+)\]', translated))
+        return sorted(extract_bracketed_terms(original)) == \
+               sorted(extract_bracketed_terms(translated))
 
     def unguard_terms(self, text: str) -> str:
         """Strip square brackets while keeping the term text."""
-        return re.sub(r'\[([^\]]+)\]', r'\1', text)
+        return remove_brackets(text)
 
 
 class LLMTranslator(BaseTranslator):

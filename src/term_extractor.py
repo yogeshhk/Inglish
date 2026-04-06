@@ -9,10 +9,9 @@ Terms are then "guarded" by wrapping them in [square brackets] so the LLM
 translator knows to leave them unchanged.
 """
 
-import re
 from typing import List, Tuple, Dict
 
-from utils import load_glossary, resolve_overlapping_spans
+from utils import load_glossary, resolve_overlapping_spans, remove_brackets, extract_bracketed_terms
 
 _PUNCT = '.,!?;:'
 
@@ -95,11 +94,11 @@ class TermExtractor:
 
     def unguard_terms(self, text: str) -> str:
         """Remove square brackets, keeping the enclosed term text."""
-        return re.sub(r'\[([^\]]+)\]', r'\1', text)
+        return remove_brackets(text)
 
     def get_guarded_terms(self, text: str) -> List[str]:
         """Return the list of terms currently inside brackets."""
-        return re.findall(r'\[([^\]]+)\]', text)
+        return extract_bracketed_terms(text)
 
     # ------------------------------------------------------------------
     # Internal matching
@@ -123,7 +122,11 @@ class TermExtractor:
                 matched_words.append(words[j])
                 j += 1
                 if node.get("$"):
-                    match_text = " ".join(matched_words)
+                    # Strip trailing punctuation from the last word so the
+                    # span covers only the term text, not the sentence punctuation.
+                    last_clean = matched_words[-1].rstrip(_PUNCT)
+                    clean_words = matched_words[:-1] + [last_clean]
+                    match_text = " ".join(clean_words)
                     prefix = " ".join(words[:i])
                     start = len(prefix) + (1 if prefix else 0)
                     end = start + len(match_text)

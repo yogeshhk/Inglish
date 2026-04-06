@@ -48,7 +48,7 @@ English Input
 ```bash
 git clone https://github.com/yourusername/inglish-translator.git
 cd inglish-translator
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 ### Set your LLM API key
@@ -84,7 +84,7 @@ print(result["hinglish_devanagari"])     # फॉर लूप ऐरे के 
 ### Web UI
 
 ```bash
-streamlit run streamlit_main.py
+streamlit run src/streamlit_main.py
 ```
 
 ---
@@ -200,7 +200,9 @@ python baseline_benchmark.py \
 - [x] Programming domain glossary
 - [x] Streamlit web UI
 - [ ] Fine-tuned NER for technical term detection
-- [ ] Physics, Finance, Medicine domain glossaries
+- [x] Physics domain glossary
+- [x] Finance domain glossary
+- [ ] Medicine domain glossary
 - [ ] REST API
 - [ ] Marathi, Tamil, Telugu, Bengali support
 - [ ] Community glossary contributions

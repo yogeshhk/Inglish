@@ -87,11 +87,13 @@ def run_baseline_benchmark(
     dataset = load_json_dataset(dataset_path)
     print(f"Loaded {len(dataset)} samples\n")
 
-    # Baseline = no LLM; translator falls back to returning guarded text as-is
+    # Baseline = no LLM; llm_provider="none" skips LLM client initialisation entirely.
+    # The pipeline's Tier 1 (term extraction) still runs; Tier 2 is never invoked
+    # because we overwrite hinglish_roman with the bracketed text below.
     config = TranslationConfig(
         domain=domain,
         target_language="hi",
-        llm_provider="gemini",   # will not be called — no API key for baseline
+        llm_provider="none",
     )
     pipeline = InglishtranslationPipeline(config)
     print(f"Pipeline initialised (domain={domain}, baseline mode)\n")

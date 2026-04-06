@@ -55,6 +55,7 @@ _DEFAULT_MODELS: Dict[str, str] = {
     "ollama":            "llama3.1",
     "lmstudio":          "local-model",
     "openai_compatible": "local-model",
+    "none":              "",   # no-op provider for baseline/rule-only mode
 }
 
 _SUPPORTED_PROVIDERS = set(_DEFAULT_MODELS)
@@ -83,7 +84,9 @@ class LLMAdapter:
     # ------------------------------------------------------------------
 
     def _init_client(self) -> None:
-        if self.provider == "groq":
+        if self.provider == "none":
+            return  # no-op — used for baseline/rule-only mode; generate() will raise if called
+        elif self.provider == "groq":
             self._init_groq()
         elif self.provider == "gemini":
             self._init_gemini()
@@ -169,6 +172,11 @@ class LLMAdapter:
 
     def generate(self, prompt: str) -> str:
         """Call the LLM and return response text. Retries on 429."""
+        if self.provider == "none":
+            raise RuntimeError(
+                "LLMAdapter was initialised with provider='none' (baseline/rule-only mode). "
+                "Call translate() only when an LLM provider is configured."
+            )
         if self.provider == "gemini":
             return self._generate_gemini(prompt)
         if self.provider == "ollama":

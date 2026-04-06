@@ -69,14 +69,17 @@ def resolve_overlapping_spans(
 ) -> List[Tuple[str, int, int]]:
     """
     Given a list of (term, start, end) spans, remove overlaps.
-    When two spans overlap, the longer one wins.
+    When two spans overlap, the longer one wins globally — not just at the
+    same start position. Uses a greedy interval-scheduling approach: process
+    candidates longest-first, keeping a span only if it doesn't overlap
+    with any already-selected span.
     Returns spans sorted by start position.
     """
     if not spans:
         return []
 
-    # Sort by start position, then by length (longer first) for tie-breaking
-    ordered = sorted(spans, key=lambda x: (x[1], -(x[2] - x[1])))
+    # Sort by length descending so the longest candidate is always considered first
+    ordered = sorted(spans, key=lambda x: -(x[2] - x[1]))
 
     kept: List[Tuple[str, int, int]] = []
     for span in ordered:
