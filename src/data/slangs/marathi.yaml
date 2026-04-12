@@ -1,0 +1,129 @@
+# Marathi podcast skill file — Bunty & Bubly personas, slangs, and prompt template
+language: marathi
+language_code: mr
+
+speakers:
+  bunty:
+    gender: male
+    edge_tts_voice: en-IN-PrabhatNeural      # Indian English male (Marathi accent)
+    personality: >
+      Bunty is the curious, enthusiastic learner who speaks Marathi-English mix.
+      He gets confused but asks great questions everyone relates to.
+      He uses: baa, arey, kai re, eka number, kaay sangtos, khara ka,
+      ajiba kay, saang na, mala nahi samajla.
+    intro_style: "Kai re Bubly, aaj kay shikanar aapo?"
+    filler_words:
+      - baa
+      - arey
+      - kai re
+      - kaay sangtos
+      - khara ka
+      - saang na
+      - mala nahi samajla
+      - ajiba
+      - haan baa
+      - waah re
+
+  bubly:
+    gender: female
+    edge_tts_voice: en-IN-NeerjaNeural       # Indian English female (Marathi accent)
+    personality: >
+      Bubly is the cheerful explainer who loves Marathi idioms and local references.
+      She makes complex things simple with warmth and humor.
+      She uses: arey aika na, eka number, mast ahe, khup chan, bagh na,
+      asa kar, simple ahe na, lakshat thev, ho na bilkul, wah wah.
+    intro_style: "Arey Bunty, aaj ekdum mast topic ahe!"
+    filler_words:
+      - arey aika na
+      - eka number
+      - mast ahe
+      - khup chan
+      - bagh na
+      - simple ahe na
+      - lakshat thev
+      - ho na bilkul
+      - wah wah
+      - ekdum baro
+
+# Slangs to sprinkle naturally into dialogue
+slangs:
+  expressions:
+    - baa
+    - arey
+    - kai re
+    - eka number
+    - mast
+    - khup chan
+    - khara ka
+    - ho na
+    - bilkul
+    - lakshat thev
+    - bagh na
+    - saang na
+    - ajiba
+    - wah wah
+    - fatafat
+    - jhakaas
+    - bindaas
+    - ekdum baro
+  transitions:
+    - toh basically
+    - matlab saang
+    - bagh na
+    - eka second aika
+    - yacha arth asa ahe
+    - simple shabdat
+    - ek udaaharan gheu
+    - asa vichar kar jase
+    - aani ek goshta
+    - he hi mahatvache ahe
+  reactions:
+    - arey wah
+    - kiti chan ahe na
+    - khara ka?
+    - mala mahit navhata
+    - interesting interesting
+    - ho ho bilkul
+    - theek ahe samajla
+    - arey ekdum baro
+
+# Podcast structure prompt template
+podcast_prompt_template: |
+  You are writing a fun, engaging Marathi-English (Marathlish) podcast script between two friends:
+  - BUNTY (male): {bunty_personality}
+  - BUBLY (female): {bubly_personality}
+
+  CONTENT TO DISCUSS:
+  {content}
+
+  RULES (follow all strictly):
+  1. Write exactly {num_turns} dialogue turns, alternating between Bunty and Bubly.
+      Start with Bubly greeting Bunty and introducing the topic energetically.
+  2. Keep ALL technical terms exactly as they appear in the content — do NOT translate them.
+      Technical terms like "function", "array", "for loop", "neural network" stay as-is.
+  3. Use natural Marathlish — mix Marathi and English the way Pune/Mumbai people actually speak.
+      Roman script only (no Devanagari). Use Marathi grammar: ahe/ahet (not hai/hain),
+      cha/chi/che (not ka/ki/ke), la (not ko).
+  4. Sprinkle these slangs naturally — do not force all of them:
+      {slangs_list}
+  5. Make it PLAYFUL and ENGAGING:
+      - Bubly explains with fun analogies ("asa vichar kar jase...")
+      - Bunty asks curious questions, gets confused, has "aha" moments
+      - Include reactions, interruptions, and light humor
+      - Add relatable Maharashtrian references (vada pav, pune traffic, IPL, misal, etc.)
+      - Bunty occasionally mishears or misunderstands — Bubly corrects with laughter
+  6. Structure naturally:
+      - Turn 1-2: Intro and topic setup
+      - Turn 3-{mid_turn}: Core concept explanation with analogies
+      - Turn {mid_turn}-{penultimate_turn}: Deeper dive, questions, examples
+      - Last 2 turns: Summary and fun sign-off
+  7. Output FORMAT — return a JSON array only, no other text:
+      [
+        {{"speaker": "Bubly", "text": "Arey Bunty, aaj ekdum mast topic ahe!..."}},
+        {{"speaker": "Bunty", "text": "Kai re Bubly, aaj kay shikanar aapo?..."}},
+        ...
+      ]
+
+  Domain context: {domain}
+
+  Generate the podcast script now:

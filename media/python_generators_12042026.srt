@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:06,072
+Bubly: Python generators ke baare mein baat karenge aaj, ekdum interesting topic hai!
+
+2
+00:00:06,672 --> 00:00:17,400
+Bunty: Python generators, haan bhai, maine suna hai inka use memory-efficient functions ke liye hota hai, par seedha seedha samajh nahi aaya abhi tak
+
+3
+00:00:18,000 --> 00:00:29,400
+Bubly: Toh basically, Python generators iterable objects ke liye iterable values ek hi samay mein utpann karte hain, jisse memory mein poori shreni ko sthan nahi dena padta
+
+4
+00:00:30,000 --> 00:00:37,656
+Bunty: Ek hi samay mein utpann karte hain, matlab samjho, ye yield keyword ka upyog karke kya karte hain?
+
+5
+00:00:38,256 --> 00:00:52,992
+Bubly: Yield keyword ka upyog karke, ve ek value utpann karke baad mein usi avastha se chalne lagte hain, jaise ki ek pyaala mein paani bharte hain, har baar ek glass paani nikalte hain, na ki poora tank le aate hain
+
+6
+00:00:53,592 --> 00:01:06,768
+Bunty: Wah, yeh toh bahut acha analogy hai, ab samajh aaya ki Python generators kyun memory-efficient hote hain, par bade datasets ya anant shreniyon ka prakriya karne ke liye inka kya fayda hai?
+
+7
+00:01:07,368 --> 00:01:23,856
+Bubly: Bade datasets ya anant shreniyon ka prakriya karne ke liye, Python generators uttam banate hain, kyunki ve ek value utpann karte hain, uska upyog karte hain, phir agle value ko utpann karte hain, isse memory ka upyog bahut kam hota hai
+
+8
+00:01:24,456 --> 00:01:35,496
+Bunty: Acha acha, toh basically, Python generators humein memory-efficient tareeke se bade datasets ko handle karne ka mauka dete hain, ye bahut faydemand hai
+
+9
+00:01:36,096 --> 00:01:46,896
+Bubly: Bilkul, Bunty, sahi hai, Python generators ka upyog karke hum apne code ko optimize kar sakte hain, aur memory ki samasya ko kam kar sakte hain
+
+10
+00:01:47,496 --> 00:02:00,048
+Bunty: Haan bhai, dhamaal episode ban gaya, Python generators ke baare mein ab maine bahut kuch seekha, toh aaj ke episode ko wrap-up karte hain, phir milte hain agle episode mein

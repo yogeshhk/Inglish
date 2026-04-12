@@ -4,8 +4,8 @@ import os
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from term_extractor import TermExtractor
-from translator import LLMTranslator
+from docgen.term_extractor import TermExtractor
+from docgen.translator import LLMTranslator
 
 
 @dataclass

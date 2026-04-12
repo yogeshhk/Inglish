@@ -1,20 +1,30 @@
 # Core
 pyyaml>=6.0
-streamlit>=1.32.0
+streamlit>=1.36.0
 
 # Google Gemini (default LLM provider)
 google-generativeai>=0.8.0
 
 # Optional LLM providers — install whichever you use
-# langchain-groq>=0.2.0          # pip install langchain-groq
-# langchain-openai>=0.2.0        # pip install langchain-openai
-# langchain-anthropic>=0.3.0     # pip install langchain-anthropic
-ollama>=0.3.0                  # pip install ollama  (local Ollama server)
 groq                           # pip install groq
-openai                         # pip install openai
+openai                         # pip install openai  (also used for LM Studio)
 anthropic                      # pip install anthropic
+ollama>=0.3.0                  # pip install ollama  (local Ollama server)
+
 # Script conversion (Devanagari↔Roman; optional but recommended)
 indic-transliteration>=2.3.0   # pip install indic-transliteration
+
+# Document loading (PodGen — file upload support)
+pypdf>=4.0.0                   # pip install pypdf         (PDF extraction)
+python-docx>=1.1.0             # pip install python-docx   (DOCX extraction)
+
+# Audio generation (PodGen — TTS and audio merging)
+edge-tts>=6.1.9                # pip install edge-tts      (Microsoft Edge TTS, free)
+pydub>=0.25.1                  # pip install pydub         (audio concatenation)
+Pillow>=10.0.0                 # pip install Pillow        (title card image generation)
+# Note: pydub requires ffmpeg on your system PATH for MP3 encoding.
+# Install ffmpeg: https://ffmpeg.org/download.html
+# Windows: winget install ffmpeg  |  Mac: brew install ffmpeg  |  Linux: apt install ffmpeg
 
 # Evaluation
 nltk>=3.8                      # BLEU / METEOR scores

@@ -12,8 +12,8 @@ import logging
 from typing import Dict, Optional
 from abc import ABC, abstractmethod
 
-from llm_adapter import LLMAdapter
-from utils import remove_brackets, extract_bracketed_terms
+from shared.llm_adapter import LLMAdapter
+from shared.utils import remove_brackets, extract_bracketed_terms
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class LLMTranslator(BaseTranslator):
         adapter_config: Dict = {
             "provider":    llm_provider,
             "temperature": temperature,
-            "max_tokens":  1024,
+            "max_tokens":  4096,
         }
         if llm_model:
             adapter_config["model"] = llm_model
@@ -122,6 +122,10 @@ RULES (follow all strictly):
    - "devanagari": {script}-script translation. Keep ALL [brackets] as-is.
      Every non-bracketed word MUST be in {script} script — including verbs like iterate, compile, return etc.
      Do NOT leave any Roman/Latin words outside of brackets in the devanagari field.{marathi_rule}
+5. NATURALNESS CHECK: Before finalising, mentally read the roman output aloud.
+   It must sound like natural spoken Hinglish — the way an educated urban Indian
+   would actually say it in conversation. If it sounds stiff, literal, or
+   unnatural, revise the roman field before outputting.
 
 EXAMPLES:
 {examples}
@@ -169,33 +173,47 @@ Output: {"roman": "[function] ko do [arguments] ke saath call karo", "devanagari
 
     def _parse_response(self, raw: str, fallback: str) -> Dict[str, str]:
         """Parse LLM JSON response; return fallback if parsing fails."""
-        # Strip markdown fences if present
         cleaned = re.sub(r'^```(?:json)?\s*|\s*```$', '', raw.strip())
+
+        data: Optional[Dict] = None
+
+        # 1. Try full JSON parse
         try:
             data = json.loads(cleaned)
         except json.JSONDecodeError:
-            # Try extracting a JSON object from the string
-            match = re.search(r'\{.*\}', cleaned, re.DOTALL)
+            pass
+
+        # 2. Try extracting the outermost {...} block
+        if data is None:
+            match = re.search(r'\{[^{}]*\}', cleaned, re.DOTALL)
             if match:
                 try:
                     data = json.loads(match.group())
                 except json.JSONDecodeError:
-                    logger.warning("Could not parse LLM response as JSON: %s", raw[:200])
-                    plain = self.unguard_terms(fallback)
-                    return {"roman": plain, "devanagari": plain}
-            else:
-                plain = self.unguard_terms(fallback)
-                return {"roman": plain, "devanagari": plain}
+                    pass
 
-        roman      = str(data.get("roman",      fallback)).strip()
-        devanagari = str(data.get("devanagari", fallback)).strip()
+        # 3. Try field-level extraction (handles truncated JSON gracefully)
+        roman_raw: str = fallback
+        deva_raw:  str = fallback
 
-        # Warn if constraints are broken, but still return what we got
-        if not self.validate_constraints(fallback, roman):
+        if data is not None:
+            roman_raw = str(data.get("roman",      fallback)).strip()
+            deva_raw  = str(data.get("devanagari", fallback)).strip()
+        else:
+            # Try to salvage just the roman field from a truncated response
+            m = re.search(r'"roman"\s*:\s*"((?:[^"\\]|\\.)*)"', cleaned)
+            if m:
+                roman_raw = m.group(1)
+            m = re.search(r'"devanagari"\s*:\s*"((?:[^"\\]|\\.)*)"', cleaned)
+            if m:
+                deva_raw = m.group(1)
+            if roman_raw == fallback:
+                logger.warning("Could not parse LLM response as JSON: %s", raw[:200])
+
+        if not self.validate_constraints(fallback, roman_raw):
             logger.warning("Bracketed terms may not be fully preserved in Roman output.")
 
-        # Strip brackets for final output
         return {
-            "roman":      self.unguard_terms(roman),
-            "devanagari": self.unguard_terms(devanagari),
+            "roman":      self.unguard_terms(roman_raw),
+            "devanagari": self.unguard_terms(deva_raw),
         }

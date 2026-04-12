@@ -1,0 +1,127 @@
+# Hindi podcast skill file — Bunty & Bubly personas, slangs, and prompt template
+language: hindi
+language_code: hi
+
+speakers:
+  bunty:
+    gender: male
+    edge_tts_voice: en-IN-PrabhatNeural      # Indian English male
+    personality: >
+      Bunty is the curious, slightly confused but enthusiastic learner.
+      He asks the questions everyone secretly wants to ask but is afraid to.
+      He speaks naturally — mostly plain Hinglish with an occasional "yaar"
+      or "bhai" when it feels right. He does NOT use slang in every sentence.
+    intro_style: "Haan yaar, batao!"
+    filler_words:
+      - yaar
+      - bhai
+      - sach mein
+      - samajh gaya
+      - arre waah
+
+  bubly:
+    gender: female
+    edge_tts_voice: en-IN-NeerjaNeural       # Indian English female
+    personality: >
+      Bubly is the energetic, clear explainer who loves simple analogies.
+      She is warm and occasionally funny, but speaks mostly in plain Hinglish.
+      She does NOT start every sentence with "arre" or "sunno sunno" —
+      she uses such expressions only once or twice in the whole episode when
+      they feel genuinely natural.
+    intro_style: "Bunty, aaj ek interesting topic hai!"
+    filler_words:
+      - dekho
+      - bilkul
+      - theek hai
+
+# Slangs to sprinkle naturally into dialogue
+slangs:
+  expressions:
+    - yaar
+    - bhai
+    - arre
+    - matlab
+    - ekdum
+    - seedha seedha
+    - kya baat hai
+    - sahi hai
+    - bilkul
+    - na
+    - haan bhai
+    - chal theek hai
+    - acha acha
+    - samajh gaya
+    - boss
+    - bindaas
+    - jhakkas
+    - dhamaal
+    - mast
+    - fatafat
+  transitions:
+    - toh basically
+    - matlab samjho
+    - dekho na
+    - suno ek second
+    - iska matlab hai
+    - simple words mein
+    - ek example lete hain
+    - socho aise jaise
+    - aur ek baat
+    - yeh bhi important hai
+  reactions:
+    - arre waah
+    - kya baat hai yaar
+    - sach mein?
+    - no way!
+    - mujhe toh pata hi nahi tha
+    - interesting interesting
+    - haan haan bilkul
+    - theek hai samajh gaya
+
+# Podcast structure prompt template
+# Placeholders: {content}, {num_turns}, {domain}, {slangs_list}, {bunty_personality}, {bubly_personality}
+podcast_prompt_template: |
+  You are writing a fun, engaging Hindi-English (Hinglish) podcast script between two friends:
+  - BUNTY (male): {bunty_personality}
+  - BUBLY (female): {bubly_personality}
+
+  CONTENT TO DISCUSS:
+  {content}
+
+  RULES (follow all strictly):
+  1. Write exactly {num_turns} dialogue turns, alternating between Bunty and Bubly.
+      Bubly MUST open by explicitly naming the main subject from the content
+      (e.g. "Python generators", "neural networks", etc.) — never just describe it
+      vaguely. Bunty's first reply should echo or react to that same topic name.
+  2. Keep ALL technical terms exactly as they appear in the content — do NOT translate them.
+      Technical terms like "function", "array", "for loop", "neural network" stay as-is.
+  3. Use natural Hinglish — mix Hindi and English the way urban Indians actually speak.
+      Roman script only (no Devanagari). Keep it conversational, not literary.
+  4. Use slangs VERY SPARINGLY — at most 2-3 across the ENTIRE script, only when
+      they fit completely naturally. Do NOT put a slang expression in every turn.
+      The conversation should sound like real people talking, not a slang showcase.
+      Available slangs (pick 2-3 maximum): {slangs_list}
+  5. Make it ENGAGING but NATURAL:
+      - Bubly explains clearly; use ONE good desi analogy if it genuinely fits
+      - Bunty asks focused questions and has natural "aha" moments
+      - Light, occasional humor — not forced jokes every line
+      - The dialogue should feel like a real conversation, not a performance
+  6. Structure naturally:
+      - Turn 1-2: Intro and topic setup
+      - Turn 3-{mid_turn}: Core concept explanation with analogies
+      - Turn {mid_turn}-{penultimate_turn}: Deeper dive, questions, examples
+      - Last 2 turns: Summary and fun sign-off
+  7. NATURALNESS CHECK: Before outputting, re-read every turn aloud mentally.
+      Each line must sound like something a real person would actually say —
+      not scripted, not repetitive, not forced. If any turn sounds artificial,
+      rewrite it. Aim for the rhythm of a real podcast conversation.
+  8. Output FORMAT — return a JSON array only, no other text:
+      [
+        {{"speaker": "Bubly", "text": "Arey Bunty, aaj bahut mast topic hai!..."}},
+        {{"speaker": "Bunty", "text": "Kya haal hai yaar!..."}},
+        ...
+      ]
+
+  Domain context: {domain}
+
+  Generate the podcast script now:

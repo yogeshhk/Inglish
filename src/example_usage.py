@@ -18,7 +18,7 @@ if sys.platform == "win32":
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from pipeline import InglishtranslationPipeline, TranslationConfig
+from docgen.pipeline import InglishtranslationPipeline, TranslationConfig
 
 
 # ---------------------------------------------------------------------------
@@ -58,20 +58,6 @@ def example_simple_translation() -> None:
 
     provider, model = _detect_provider()
     print(f"Provider: {provider}   Model: {model}\n")
-
-    # ----------------------------------------------------------------
-    # To use a specific provider, replace the two lines above with one
-    # of these and set the matching environment variable:
-    #
-    #   Groq   (free):  provider, model = "groq",      "llama-3.1-8b-instant"
-    #                   set GROQ_API_KEY=gsk_...
-    #
-    #   Gemini (free):  provider, model = "gemini",    "gemini-2.0-flash"
-    #                   set GEMINI_API_KEY=AIza...
-    #
-    #   OpenAI:         provider, model = "openai",    "gpt-4o-mini"
-    #                   set OPENAI_API_KEY=sk-...
-    # ----------------------------------------------------------------
 
     config = TranslationConfig(
         domain="programming",
@@ -140,6 +126,7 @@ def example_provider_comparison() -> None:
         ("openai",    "gpt-4o-mini",               "OPENAI_API_KEY"),
         ("anthropic", "claude-3-5-haiku-20241022", "ANTHROPIC_API_KEY"),
         ("ollama",    "llama3.1",                  "(none)"),
+        ("lmstudio",  "local-model",               "(none)"),
     ]
 
     print("\nAvailable LLM providers:\n")

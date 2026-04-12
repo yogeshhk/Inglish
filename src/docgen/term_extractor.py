@@ -11,7 +11,12 @@ translator knows to leave them unchanged.
 
 from typing import List, Tuple, Dict
 
-from utils import load_glossary, resolve_overlapping_spans, remove_brackets, extract_bracketed_terms
+from shared.utils import (
+    load_glossary,
+    resolve_overlapping_spans,
+    remove_brackets,
+    extract_bracketed_terms,
+)
 
 _PUNCT = '.,!?;:'
 
@@ -122,8 +127,6 @@ class TermExtractor:
                 matched_words.append(words[j])
                 j += 1
                 if node.get("$"):
-                    # Strip trailing punctuation from the last word so the
-                    # span covers only the term text, not the sentence punctuation.
                     last_clean = matched_words[-1].rstrip(_PUNCT)
                     clean_words = matched_words[:-1] + [last_clean]
                     match_text = " ".join(clean_words)

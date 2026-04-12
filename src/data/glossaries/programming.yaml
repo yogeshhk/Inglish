@@ -48,14 +48,16 @@ terms:
   - node
   - nodes
   - iterator
+  - iterators
+  - generator
+  - generators
+  - yield
   - index
   - indices
   - element
   - length
   - size
   - capacity
-  - key
-  - keys
   - value
   - values
 
@@ -141,6 +143,12 @@ terms:
 
 # Compound terms (bigrams, trigrams) — noun phrases only
 compound_terms:
+  # Generators & iterators
+  - yield statement
+  - generator expression
+  - generator function
+  - lazy evaluation
+
   # Loops & control flow
   - for loop
   - while loop

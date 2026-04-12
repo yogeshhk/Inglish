@@ -5,8 +5,8 @@ Baseline benchmark — rule-based (no LLM) translation evaluation.
 This is the simplest possible approach: term extraction + guarding only.
 Used as a lower-bound reference when comparing against LLM-based methods.
 
-Usage:
-    python baseline_benchmark.py \\
+Usage (run from src/):
+    python docgen/baseline_benchmark.py \\
         --dataset data/datasets/eval/programming_eval.json \\
         --domain  programming \\
         --output  results/baseline_results.json
@@ -18,10 +18,10 @@ import time
 import argparse
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from pipeline import InglishtranslationPipeline, TranslationConfig
-from utils import load_json_dataset
+from docgen.pipeline import InglishtranslationPipeline, TranslationConfig
+from shared.utils import load_json_dataset
 
 
 # ---------------------------------------------------------------------------
@@ -87,9 +87,6 @@ def run_baseline_benchmark(
     dataset = load_json_dataset(dataset_path)
     print(f"Loaded {len(dataset)} samples\n")
 
-    # Baseline = no LLM; llm_provider="none" skips LLM client initialisation entirely.
-    # The pipeline's Tier 1 (term extraction) still runs; Tier 2 is never invoked
-    # because we overwrite hinglish_roman with the bracketed text below.
     config = TranslationConfig(
         domain=domain,
         target_language="hi",
@@ -127,7 +124,6 @@ def run_baseline_benchmark(
     print(f"Total Samples:           {metrics['total_samples']}")
     print(sep)
 
-    # Sample outputs
     print("\nSample Outputs:")
     print("-" * 60)
     for i in range(min(3, len(predictions))):
@@ -142,9 +138,9 @@ def run_baseline_benchmark(
             "config": {"domain": domain, "translator_type": "baseline", "dataset": dataset_path},
             "metrics": metrics,
             "performance": {
-                "total_time":        total_time,
+                "total_time":          total_time,
                 "avg_time_per_sample": total_time / len(predictions),
-                "throughput":        throughput,
+                "throughput":          throughput,
             },
             "predictions": predictions,
         }

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest docgen/test_docgen.py -v)",
+      "Bash(python -m pytest podgen/test_podgen.py -v)",
+      "Bash(python -m pytest docgen/test_docgen.py podgen/test_podgen.py -v)",
+      "Bash(ls:*)",
+      "Bash(python -m pytest docgen/test_docgen.py podgen/test_podgen.py -v --tb=short)",
+      "Bash(rm README.md setup.py Makefile.txt quickstart_script.sh)",
+      "Bash(mkdir -p data/datasets/eval data/patterns)",
+      "Bash(mv programming_eval.json data/datasets/eval/programming_eval.json)",
+      "Bash(mv regex_patterns.json data/patterns/regex_patterns.json)",
+      "Bash(python -m pytest docgen/test_docgen.py podgen/test_podgen.py -q)",
+      "Bash(python -c \"import edge_tts; print\\('edge-tts ok'\\)\")",
+      "Bash(python -c \"import pydub; print\\('pydub ok'\\)\")",
+      "Bash(python -c \"import pypdf; print\\('pypdf ok'\\)\")",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import edge_tts, pydub; print\\('edge-tts and pydub ok'\\)\")",
+      "Bash(python -c \"import os; keys = {'GEMINI': 'GEMINI_API_KEY','GROQ': 'GROQ_API_KEY','OPENAI': 'OPENAI_API_KEY','ANTHROPIC': 'ANTHROPIC_API_KEY'}; [print\\(f'{k}: SET'\\) if os.environ.get\\(v\\) else print\\(f'{k}: not set'\\) for k,v in keys.items\\(\\)]\")",
+      "Bash(ffmpeg -version)",
+      "Bash(python -)",
+      "Bash(set PYTHONIOENCODING=utf-8)",
+      "Bash(python -c ':*)",
+      "Bash(python:*)",
+      "Bash(grep -v \"^$\")",
+      "Bash(?:json)",
+      "Bash(?\\\\s*)"
+    ]
+  }
+}
